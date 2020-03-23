@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap %}
+{% block content-header %}
+
+
+{% endblock content-header %}
+{% block content-main %}
+<
+
+{% endblock content-main %}
+
+{% block extraJS %}
+    <script>
+        $(document).ready(function () {
+            $('#tabela').DataTable({
+                "language": {
+                    "url": "{% static 'datatables/Portuguese-Brasil.json' %}"
+                },
+                stateSave: true,
+            });
+        });
+    </script>
+
+{% endblock extraJS %}
