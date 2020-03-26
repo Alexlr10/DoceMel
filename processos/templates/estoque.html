@@ -33,8 +33,6 @@
                     <tr>
                         <th>Produto</th>
                         <th>Quantidade</th>
-                        <th>Limite</th>
-                        <th>Data</th>
 
 
                         <th>Ações</th>
@@ -46,10 +44,7 @@
                     {% for u in estoque %}
                     <tr>
                         <td>{{ u.produto }}</td>
-                        <td>{{ u.qtd }}</td>
-                        <td>{{ u.limite }}</td>
-                        <td>{{ u.data}}</td>
-
+                        <td>{{ u.quantidade }}</td>
 
                         </td>
 

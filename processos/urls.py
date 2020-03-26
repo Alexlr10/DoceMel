@@ -4,10 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from .views import *
 from . import views
-from django.contrib.staticfiles.urls import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-# from VivoX import settings_local
-from django.conf import settings
+
 
 
 urlpatterns = [
@@ -28,24 +25,15 @@ urlpatterns = [
     path('cliente_edit/<int:pk>/', views.cliente_edit, name='cliente_edit'),
     path('cliente_delete/<int:pk>/', views.cliente_delete, name='cliente_delete'),
 
+    # Produto
+    path('produto/', views.produto, name='produto'),
+    path('produto_edit/<int:pk>/', views.produto_edit, name='produto_edit'),
+    path('produto_delete/<int:pk>/', views.produto_delete, name='produto_delete'),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # Estoque
+    path('estoque/', views.estoque, name='estoque'),
+    path('estoque_edit/<int:pk>/', views.estoque_edit, name='estoque_edit'),
+    path('estoque_delete/<int:pk>/', views.estoque_delete, name='estoque_delete'),
 
     # Fornecedor
     path('fornecedor/', views.fornecedor, name='fornecedor'),
@@ -57,15 +45,11 @@ urlpatterns = [
     path('funcionario_edit/<int:pk>/', views.funcionario_edit, name='funcionario_edit'),
     path('funcionario_delete/<int:pk>/', views.funcionario_delete, name='funcionario_delete'),
 
-    # Produto
-    path('produto/', views.produto, name='produto'),
-    path('produto_edit/<int:pk>/', views.produto_edit, name='produto_edit'),
-    path('produto_delete/<int:pk>/', views.produto_delete, name='produto_delete'),
 
-    # Estoque
-    path('estoque/', views.estoque, name='estoque'),
-    path('estoque_edit/<int:pk>/', views.estoque_edit, name='estoque_edit'),
-    path('estoque_delete/<int:pk>/', views.estoque_delete, name='estoque_delete'),
+
+
+
+
 
     # Compra
     path('compra/', views.compra, name='compra'),

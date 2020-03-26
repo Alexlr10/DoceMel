@@ -223,7 +223,6 @@ class Funcionario(models.Model):
 class Produto(models.Model):
     nomeproduto = models.CharField(_('Produto'), max_length=30, null=True, blank=True)
     descricao = models.TextField('Descrição', null=True, blank=True)
-    quantidade = models.IntegerField('Quantidade', blank=True, null=True)
     valor = models.DecimalField('Valor', max_digits=6, decimal_places=2)
 
     class Meta:
@@ -235,9 +234,8 @@ class Produto(models.Model):
 
 class Estoque(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='Produto')
-    qtd = models.IntegerField('Quantidade', blank=True, null=True)
-    limite = 50
-    data= models.DateTimeField('Data', blank=True, null=True)
+    quantidade = models.IntegerField('Quantidade', blank=True, null=True)
+
 
     class Meta:
         verbose_name = _("Estoque")
