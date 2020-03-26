@@ -13,6 +13,8 @@ from django.conf import settings
 urlpatterns = [
 
     path('',views.home, name='home'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html',redirect_authenticated_user=True), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     # USUARIO
     path('usuarios/', views.usuarios, name='usuarios'),
@@ -25,6 +27,25 @@ urlpatterns = [
     path('cliente/', views.cliente, name='cliente'),
     path('cliente_edit/<int:pk>/', views.cliente_edit, name='cliente_edit'),
     path('cliente_delete/<int:pk>/', views.cliente_delete, name='cliente_delete'),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # Fornecedor
     path('fornecedor/', views.fornecedor, name='fornecedor'),

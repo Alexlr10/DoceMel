@@ -1,4 +1,4 @@
-{% extends 'legacy/base.html' %} {% load static %} {% block content-header %}
+{% extends 'base.html' %} {% load static %} {% block content-header %}
 <i class="fa fa-users "> </i> Usuário
 <small>Meus Dados</small>
 {% endblock content-header %} {% block content-main %}
@@ -18,7 +18,7 @@
             <div class="ui-image">
                 <!-- User Image -->
                 {% if Usuario.Foto.url != none %}
-                <img src="{{ Usuario.Foto.url }}" alt="Foto de Perfil" class="img-responsive" width="100" height="100"> {% else %}
+                <img src="{{ usuario.Foto.url }}" alt="Foto de Perfil" class="img-responsive" width="100" height="100"> {% else %}
                 <img src="{% static 'img/nophoto.jpg' %}" alt="Profile Picture" class="img-responsive" width="100"
                     height="100"> {% endif %}
             </div>

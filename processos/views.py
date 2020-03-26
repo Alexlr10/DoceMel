@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
+from django.core.mail import send_mail
 from .models import *
 from .forms import *
 from django.contrib import messages
@@ -30,32 +31,32 @@ class usuariosDelete(DeleteView):
 
 
 def usuariosEdit(request, pk):
-    q = get_object_or_404(Usuario, pk=pk)
+    usuario = get_object_or_404(Usuario, pk=pk)
 
-    form = UsuarioCreationForm(request.POST or None, instance=q)
+    form = UsuarioCreationForm(request.POST or None, instance=usuario)
 
     if form.is_valid():
         form.save()
         return redirect('usuarios')
 
     context = {
-        'formusuariosedit': form,
-        'id': q.id
+        'form': form,
+        'usuario': usuario
     }
 
-    return render(request, 'legacy/usuarios_edit.html', context)
+    return render(request, 'usuarios_edit.html', context)
 
 
 
 def usuarios(request):
     if request.FILES:
         from .models import Importacao
-        d = Importacao()
-        d.Usuario = request.user
-        d.Arquivo = request.FILES['arquivo']
-        d.TipoArquivo = 'USUA'
-        d.save()
-        d.ProcessaArquivo()
+        arquivo = Importacao()
+        arquivo.Usuario = request.user
+        arquivo.Arquivo = request.FILES['arquivo']
+        arquivo.TipoArquivo = 'USUA'
+        arquivo.save()
+        arquivo.ProcessaArquivo()
         total = d.TotalRegistros
 
         messages.success(request, f'{total} usuários importados.')
@@ -74,7 +75,7 @@ def usuarios(request):
             'formusuario': form
         }
 
-        return render(request, 'legacy/usuarios.html', context)
+        return render(request, 'usuarios.html', context)
 
     form = UsuarioCreationForm()
 
@@ -124,10 +125,10 @@ def editar_meus_dados(request):
     usuario = request.user
 
     context = {
-        'Usuario': usuario
+        'usuario': usuario
     }
 
-    return render(request, 'legacy/meus_dados.html', context)
+    return render(request, 'meus_dados.html', context)
 
 
 
