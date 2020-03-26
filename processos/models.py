@@ -1,8 +1,165 @@
 from django.db import models
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save, post_delete
+
+
+FUNCAO_CHOICE = (
+    ('PROP','Proprietario'),
+    ('ADM', 'Administrador'),
+    ('USU', 'Usuario'),
+    ('MED', 'Médico'),
+    ('FARM','Farmaceutico'),
+    ('NUT', 'Nutricionista'),
+    ('PSI', 'Psicólogo'),
+)
+
+FUNCAO_CHOICE_PROF = (
+    ('ADM', 'Administrador'),
+    ('MED', 'Médico'),
+    ('FARM','Farmaceutico'),
+    ('NUT', 'Nutricionista'),
+    ('PSI', 'Psicólogo'),
+    ('FIS', 'Fisioterapeuta'),
+)
+
+GENERO_CHOICE = (
+    ('M', 'Masculino'),
+    ('F', 'Feminino'),
+    ('N', 'Não Declarado'),
+)
+
+UF = (
+    ('MG', 'Minas Gerais'),
+    ('SP', 'São Paulo'),
+    ('RJ', 'Rio de Janeiro'),
+    ('ES', 'Espirito Santo'),
+    ('BA', 'Bahia'),
+)
+
+STATUS = (
+    (0, 'Iniciado'),
+    (1, 'Em andamento'),
+    (2, 'Pendente'),
+    (3, 'Resolvido'),
+)
+
+MOD = (
+    (0, 'ACC'),
+    (1, 'SAC'),
+
+)
+
+
+
+class UsuarioManager(BaseUserManager):
+    def create_user(self, Login, Nome, Situacao, CPF, Email, Funcao, password=None):
+        user = self.model(
+            Login=Login,
+            Nome=Nome,
+            Situacao=Situacao,
+            CPF=CPF,
+            Email=Email,
+            Funcao=Funcao
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, Login, Nome, Situacao, CPF, Email, Funcao, password):
+        user = self.create_user(
+            Login,
+            Nome,
+            Situacao,
+            CPF,
+            Email,
+            Funcao
+        )
+        user.set_password(password)
+        user.is_admin = True
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
+
+
+class Usuario(AbstractBaseUser, PermissionsMixin):
+    """Model definition for Usuario."""
+
+    Nome = models.CharField('Nome', max_length=80)
+    Foto = models.ImageField('Foto', upload_to='profile', default=None)
+    Login = models.CharField('Login', max_length=50, unique=True)
+    password = models.CharField('Senha', max_length=128)
+
+    Situacao = models.BooleanField('Ativo', default=True)
+    CPF = models.CharField('CPF', max_length=20)
+    RG = models.CharField('RG', max_length=20, blank=True, null=True)
+    Rua = models.CharField('Rua', max_length=100, blank=True, null=True)
+    N = models.CharField('Número', max_length=10, blank=True, null=True)
+    CEP = models.CharField('CEP', max_length=50, blank=True, null=True)
+    Email = models.EmailField('Email', max_length=254)
+    Celular = models.CharField('Celular', max_length=50, blank=True, null=True)
+    Data_de_Nascimento = models.DateField(
+        'Data de Nascimento', blank=True, null=True)
+    Data_de_Admissão = models.DateField(
+        'Data de Admissão', blank=True, null=True)
+    Data_de_Demissão = models.DateField(
+        'Data de Demissão', blank=True, null=True)
+    Complemento = models.CharField(
+        'Complemento', max_length=50, blank=True, null=True)
+    Salario = models.DecimalField(
+        'Salário', max_digits=15, decimal_places=2, blank=True, null=True)
+    INSS = models.DecimalField(
+        'INSS', max_digits=15, decimal_places=2, blank=True, null=True)
+    Comissao = models.BooleanField('Recebe comissão', default=True)
+    Agencia = models.CharField('Agência', max_length=50, blank=True, null=True)
+    Conta_Corrente = models.CharField(
+        'Conta', max_length=50, blank=True, null=True)
+    Data_cadastro = models.DateTimeField(
+        'Data de Cadastro', blank=True, null=True)
+
+    Proximas_ferias = models.CharField(
+        'Próximas férias', max_length=50, blank=True, null=True)
+    Periodo_de_afastamento = models.CharField(
+        'Período de afastamento', max_length=50, blank=True, null=True)
+    Funcao = models.CharField('Função', max_length=4, choices=FUNCAO_CHOICE)
+
+    # campos necessários pra o DJango
+    last_login = models.DateTimeField(
+        'Último login', blank=True, null=True, db_column='last_login')
+    is_active = models.BooleanField('Ativo', default=True)
+    is_staff = models.BooleanField('Membro da Equipe', default=False)
+    is_admin = models.BooleanField('Administrador', default=False)
+
+    USERNAME_FIELD = 'Login'
+    EMAIL_FIELD = 'Email'
+    REQUIRED_FIELDS = ['Nome', 'Situacao', 'CPF', 'Email', 'Funcao']
+
+    objects = UsuarioManager()
+
+    '''@receiver(post_save, sender=Usuario)
+def post_usuario(self, instance, *args, **kwargs):
+    if not Usuario.objects.filter(instance.Nome).exist():
+        u = instance.Usuario.save()'''
+
+    @property
+    def is_superuser(self):
+        return self.is_admin
+
+    def get_full_name(self):
+        return self.Nome
+
+    class Meta:
+        """Meta definition for Usuario."""
+
+        verbose_name = 'Usuário'
+        verbose_name_plural = 'Usuários'
+
+    def __str__(self):
+        """Unicode representation of Usuario."""
+        return self.Nome
 
 
 

@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy, reverse
 from .models import *
 from .forms import *
 from django.contrib import messages
@@ -7,7 +9,130 @@ from django.contrib import messages
 # import itertools
 
 
-# Create your views here.
+
+class usuariosUpdate(UpdateView):
+    model = Usuario
+    fields = ('Nome',
+              'Login',
+              'Situacao',
+              'CPF',
+              'Email',
+              'Funcao',
+              )
+    success_url = reverse_lazy('usuarios')
+    template_name = 'legacy/usuarios_edit.html'
+
+
+class usuariosDelete(DeleteView):
+    model = Usuario
+    success_url = reverse_lazy('usuarios')
+    template_name = 'legacy/usuarios_delete.html'
+
+
+def usuariosEdit(request, pk):
+    q = get_object_or_404(Usuario, pk=pk)
+
+    form = UsuarioCreationForm(request.POST or None, instance=q)
+
+    if form.is_valid():
+        form.save()
+        return redirect('usuarios')
+
+    context = {
+        'formusuariosedit': form,
+        'id': q.id
+    }
+
+    return render(request, 'legacy/usuarios_edit.html', context)
+
+
+
+def usuarios(request):
+    if request.FILES:
+        from .models import Importacao
+        d = Importacao()
+        d.Usuario = request.user
+        d.Arquivo = request.FILES['arquivo']
+        d.TipoArquivo = 'USUA'
+        d.save()
+        d.ProcessaArquivo()
+        total = d.TotalRegistros
+
+        messages.success(request, f'{total} usuários importados.')
+
+        return redirect('usuarios')
+
+    if request.POST:
+
+        form = UsuarioCreationForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('usuarios')
+        context = {
+            'Usuarios': q,
+            'formusuario': form
+        }
+
+        return render(request, 'legacy/usuarios.html', context)
+
+    form = UsuarioCreationForm()
+
+    q = Usuario.objects.all().order_by('-id')[:100]  # ORM do Django
+
+    ultima_imp = Usuario.objects.all().order_by('-id')[:1]
+
+    context = {
+        'Usuarios': q,
+        'formusuario': form,
+        'ultima_imp': ultima_imp
+        # 'Filial': i,
+
+    }
+
+    return render(request, 'usuarios.html', context)
+
+
+def editar_meus_dados(request):
+    if request.method == 'POST':
+        usuario = get_object_or_404(Usuario, pk=request.user.id)
+        email_usuario = request.user.Email.lower()
+        if request.FILES.get('usuarioFoto') != None:
+            usuario.Foto = request.FILES.get('usuarioFoto')
+
+        usuario.Nome = request.POST.get('nomeUsuario')
+        usuario.Email = request.POST.get('emailUsuario')
+        usuario.Celular = request.POST.get('celularUsuario')
+        usuario.CPF = request.POST.get('cpfUsuario')
+        usuario.RG = request.POST.get('rgUsuario')
+
+        if request.POST.get('usuarioSenha') != None:
+            usuario.Senha = request.POST.get('usuarioSenha')
+
+        usuario.save()
+        send_mail(
+            'VivoX - Atualiação',
+            'Você atualizou as informações do seu perfil',
+            'vivox.nao-responda@gestaovivox.com.br',
+            [email_usuario],
+            fail_silently=False,
+        )
+        messages.success(request, 'Dados alterados com sucesso')
+
+        return redirect(reverse('meusdados'))
+
+    usuario = request.user
+
+    context = {
+        'Usuario': usuario
+    }
+
+    return render(request, 'legacy/meus_dados.html', context)
+
+
+
+
+
 
 def home(request):
     cliente = Cliente.objects.all()
@@ -26,45 +151,55 @@ def home(request):
     }
     return render(request,'home.html',context)
 
+
+######## Cliente
+
 def cliente(request):
     cliente = Cliente.objects.all()
-    form = ClienteForm(request.POST)
-
     if request.method == 'POST':
+        form = ClienteForm(request.POST)
+
         if form.is_valid():
             form.save()
-            messages.success(request, 'Registrado com sucesso')
+            messages.success(request, 'Cliente cadastrado com sucesso')
             return redirect('cliente')
 
-    context = {
+    form = ClienteForm()
 
+    context = {
         'form': form,
-        'cliente':cliente
+        'cliente': cliente
     }
 
     return render(request, 'cliente.html', context)
 
-def cliente_delete(requestt,pk):
-    cliente = get_object_or_404(Cliente,pk=pk)
-    cliente.delete()
-    return redirect('cliente')
+
 
 def cliente_edit(request, pk):
+    it = Cliente.objects.get(pk=pk)
 
-    q = get_object_or_404(Cliente, pk=pk)
-
-    form = ClienteForm(request.POST or None, instance=q)
+    form = ClienteForm(request.POST or None, instance=it)
 
     if form.is_valid():
         form.save()
+        messages.success(request, 'Cadastro alterado com sucesso')
         return redirect('cliente')
 
     context = {
         'form': form,
-        'id': pk
+        'id': it.id
     }
 
-    return render(request, 'cliente_edit.html', context)
+    return render(request, 'legacy/cliente_edit.html', context)
+
+
+def cliente_delete(request, pk):
+    it = Cliente.objects.get(pk=pk)
+    it.delete()
+    messages.error(request, 'Cadastro removido com sucesso')
+
+    return redirect('cliente')
+
 
 def fornecedor(request):
     fornecedor = Fornecedor.objects.all()

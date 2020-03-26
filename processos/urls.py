@@ -14,6 +14,13 @@ urlpatterns = [
 
     path('',views.home, name='home'),
 
+    # USUARIO
+    path('usuarios/', views.usuarios, name='usuarios'),
+    path('updateusuarios/<int:pk>/', views.usuariosEdit, name='usuarios_edit'),
+    path('usuarios/delete/<pk>',
+         login_required(usuariosDelete.as_view()), name='usuarios_delete'),
+    path('meus_dados/', views.editar_meus_dados, name='meusdados'),
+
     # Cliente
     path('cliente/', views.cliente, name='cliente'),
     path('cliente_edit/<int:pk>/', views.cliente_edit, name='cliente_edit'),
