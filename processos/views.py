@@ -176,9 +176,9 @@ def cliente(request):
 
 
 def cliente_edit(request, pk):
-    it = Cliente.objects.get(pk=pk)
+    cliente = Cliente.objects.get(pk=pk)
 
-    form = ClienteForm(request.POST or None, instance=it)
+    form = ClienteForm(request.POST or None, instance=cliente)
 
     if form.is_valid():
         form.save()
@@ -187,10 +187,10 @@ def cliente_edit(request, pk):
 
     context = {
         'form': form,
-        'id': it.id
+        'cliente': cliente
     }
 
-    return render(request, 'legacy/cliente_edit.html', context)
+    return render(request, 'cliente_edit.html', context)
 
 
 def cliente_delete(request, pk):
