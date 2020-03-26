@@ -46,28 +46,102 @@
 
         </a>
         <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-static-top">
-        <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-            <span class="sr-only">Toggle navigation</span>
-        </a>
 
-<div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
+  <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
 
-          <!-- Notifications: style can be found in dropdown.less -->
-
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
 
 
-        <div class="navbar-custom-menu">
-            <ul class="nav navbar-nav">
+                        <!-- Notifications: style can be found in dropdown.less -->
 
-            <!-- User Account: style can be found in dropdown.less -->
+                        {% if ntarefas > 0 %}
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bell-o"></i>
+                                <span class="label label-warning">{{ ntarefas }}</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header">Voce tem {{ ntarefas }} tarefas para hoje</li>
+                                <li>
+                                    <!-- inner menu: contains the actual data -->
+                                    <ul class="menu">
+                                        {% for n in notificacao %}
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-warning text-yellow"></i> {{ n.Tarefa }}
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
 
-            </ul>
-        </div>
-        </nav>
-    </header>
+
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="footer"><a href="{% url 'tarefaexec' %}">Ver Todas</a></li>
+                    </ul>
+                    </li>
+                    {% endif %}
+
+
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+
+                            <li class="dropdown user user-menu"><span style="align-items: center; color: white">
+                                    <span style="color: white" id="tempo1"></span>
+                                </span>
+                            </li>
+
+                            <!-- User Account: style can be found in dropdown.less -->
+                            <li class="dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    {% if request.user.Foto != '' %}
+                                    <img src="{{ request.user.Foto.url }}" class="user-image" alt="User Image">
+                                    {% else %}
+                                    <img src="{% static 'img/nophoto.jpg' %}" class="user-image" alt="User Image">
+                                    {% endif %}
+                                    <span class="hidden-xs">{{ request.user.Nome }}</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <!-- User image -->
+                                    <li class="user-header">
+                                        {% if request.user.Foto != '' %}
+                                        <img src="{{ request.user.Foto.url }}" class="img-circle" alt="User Image">
+                                        {% else %}
+                                        <img src="{% static 'img/nophoto.jpg' %}" class="img-circle" alt="User Image">
+                                        {% endif %}
+                                        <p>
+                                            {{ request.user.Nome }}
+
+                                            <small>{{ request.user.get_Funcao_display }} </small>
+
+                                        </p>
+                                    </li>
+                                    <!-- Menu Body -->
+
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer">
+                                        <div class="pull-left">
+                                            <a  class="btn btn-default btn-flat">Meus Dados</a>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a  class="btn btn-default btn-flat">Sair</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            <li>
+                                <a   title="Sair"><i class="fa fa-sign-out"></i></a>
+                            </li>
+                            </li>
+                        </ul>
+                    </div>
+            </nav>
+        </header>
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->

@@ -194,8 +194,8 @@ def cliente_edit(request, pk):
 
 
 def cliente_delete(request, pk):
-    it = Cliente.objects.get(pk=pk)
-    it.delete()
+    cliente = Cliente.objects.get(pk=pk)
+    cliente.delete()
     messages.error(request, 'Cadastro removido com sucesso')
 
     return redirect('cliente')
