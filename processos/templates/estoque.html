@@ -35,21 +35,18 @@
                         <th>Quantidade</th>
 
 
-                        <th>Ações</th>
+
 
                     </tr>
                     </thead>
                     <tbody>
 
-                    {% for u in estoque %}
+                    {% for u in lote %}
                     <tr>
-                        <td>{{ u.produto.nomeproduto }}</td>
+                        <td>{{ u.produto__nomeproduto }}</td>
                         <td>{{ u.quantidade }}</td>
 
                         </td>
-
-
-
 
                     </tr>
 

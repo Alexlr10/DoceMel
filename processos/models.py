@@ -207,11 +207,6 @@ class Lote(models.Model):
         verbose_name = _("Lote")
         verbose_name_plural = _("Lotes")
 
-    def __str__(self):
-        return self.produto.nomeproduto
-
-    def __str__(self):
-        return str(self.quantidade)
 
 
 class Estoque(models.Model):

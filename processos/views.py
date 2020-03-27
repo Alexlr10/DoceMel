@@ -246,10 +246,10 @@ def produto_edit(request, pk):
 @login_required
 def estoque(request):
     produto = Produto.objects.values('nomeproduto')
-    lote = Lote.objects.all().values('produto_id').annotate(quantidade = Sum('quantidade'))  #.aggregate(Sum('quantidade'))
-    form = EstoqueForm(request.POST)
+    lote = Lote.objects.select_related('produto').values('produto__nomeproduto').annotate(quantidade = Sum('quantidade')) #.aggregate(Sum('quantidade'))
 
-    print(produto)
+    form = EstoqueForm(request.POST)
+    print(lote)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -263,6 +263,7 @@ def estoque(request):
         'produto':produto,
         'lote':lote
     }
+
 
 
     return render(request, 'estoque.html', context)
