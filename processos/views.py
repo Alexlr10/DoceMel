@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
@@ -5,12 +6,10 @@ from django.core.mail import send_mail
 from .models import *
 from .forms import *
 from django.contrib import messages
-# from . import models
-# import calendar
-# import itertools
+from django.contrib.auth.decorators import login_required
 
 
-
+@login_required
 class usuariosUpdate(UpdateView):
     model = Usuario
     fields = ('Nome',
@@ -29,7 +28,7 @@ class usuariosDelete(DeleteView):
     success_url = reverse_lazy('usuarios')
     template_name = 'legacy/usuarios_delete.html'
 
-
+@login_required
 def usuariosEdit(request, pk):
     usuario = get_object_or_404(Usuario, pk=pk)
 
@@ -93,7 +92,7 @@ def usuarios(request):
 
     return render(request, 'usuarios.html', context)
 
-
+@login_required
 def editar_meus_dados(request):
     if request.method == 'POST':
         usuario = get_object_or_404(Usuario, pk=request.user.id)
@@ -134,7 +133,7 @@ def editar_meus_dados(request):
 
 
 
-
+@login_required
 def home(request):
     cliente = Cliente.objects.all()
     form = ClienteForm(request.POST)
@@ -154,7 +153,7 @@ def home(request):
 
 
 ######## Cliente
-
+@login_required
 def cliente(request):
     cliente = Cliente.objects.all()
     if request.method == 'POST':
@@ -175,7 +174,7 @@ def cliente(request):
     return render(request, 'cliente.html', context)
 
 
-
+@login_required
 def cliente_edit(request, pk):
     cliente = Cliente.objects.get(pk=pk)
 
@@ -193,7 +192,7 @@ def cliente_edit(request, pk):
 
     return render(request, 'cliente_edit.html', context)
 
-
+@login_required
 def cliente_delete(request, pk):
     cliente = Cliente.objects.get(pk=pk)
     cliente.delete()
@@ -201,88 +200,7 @@ def cliente_delete(request, pk):
 
     return redirect('cliente')
 
-
-def fornecedor(request):
-    fornecedor = Fornecedor.objects.all()
-    form = FornecedorForm(request.POST)
-
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Registrado com sucesso')
-            return redirect('fornecedor')
-
-    context = {
-
-        'form': form,
-        'fornecedor':fornecedor
-    }
-
-    return render(request, 'fornecedor.html', context)
-
-def fornecedor_delete(requestt,pk):
-    fornecedor = get_object_or_404(Fornecedor,pk=pk)
-    fornecedor.delete()
-    return redirect('fornecedor')
-
-def fornecedor_edit(request, pk):
-
-    q = get_object_or_404(Funcionario, pk=pk)
-
-    form = FornecedorForm(request.POST or None, instance=q)
-
-    if form.is_valid():
-        form.save()
-        return redirect('fornecedor')
-
-    context = {
-        'form': form,
-        'id': pk
-    }
-
-    return render(request, 'fornecedor_edit.html', context)
-
-def funcionario(request):
-    funcionario = Funcionario.objects.all()
-    form = FuncionarioForm(request.POST)
-
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Registrado com sucesso')
-            return redirect('funcionario')
-
-    context = {
-
-        'form': form,
-        'funcionario':funcionario
-    }
-
-    return render(request, 'funcionario.html', context)
-
-def funcionario_delete(requestt,pk):
-    funcionario = get_object_or_404(Funcionario,pk=pk)
-    funcionario.delete()
-    return redirect('funcionario')
-
-def funcionario_edit(request, pk):
-
-    q = get_object_or_404(Funcionario, pk=pk)
-
-    form = FuncionarioForm(request.POST or None, instance=q)
-
-    if form.is_valid():
-        form.save()
-        return redirect('funcionario')
-
-    context = {
-        'form': form,
-        'id': pk
-    }
-
-    return render(request, 'funcionario_edit.html', context)
-
-
+@login_required
 def produto(request):
     produto = Produto.objects.all()
     form = ProdutoForm(request.POST)
@@ -301,11 +219,13 @@ def produto(request):
 
     return render(request, 'produto.html', context)
 
+@login_required
 def produto_delete(requestt,pk):
     produto = get_object_or_404(Produto,pk=pk)
     produto.delete()
     return redirect('produto')
 
+@login_required
 def produto_edit(request, pk):
 
     q = get_object_or_404(Produto, pk=pk)
@@ -323,10 +243,13 @@ def produto_edit(request, pk):
 
     return render(request, 'produto_edit.html', context)
 
-
+@login_required
 def estoque(request):
-    estoque = Estoque.objects.all()
+    produto = Produto.objects.values('nomeproduto')
+    lote = Lote.objects.all().values('produto_id').annotate(quantidade = Sum('quantidade'))  #.aggregate(Sum('quantidade'))
     form = EstoqueForm(request.POST)
+
+    print(produto)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -337,33 +260,17 @@ def estoque(request):
     context = {
 
         'form': form,
-        'estoque':estoque
+        'produto':produto,
+        'lote':lote
     }
+
 
     return render(request, 'estoque.html', context)
 
-def estoque_delete(requestt,pk):
-    estoque = get_object_or_404(Estoque,pk=pk)
-    estoque.delete()
-    return redirect('estoque')
 
-def estoque_edit(request, pk):
 
-    q = get_object_or_404(Estoque, pk=pk)
 
-    form = EstoqueForm(request.POST or None, instance=q)
-
-    if form.is_valid():
-        form.save()
-        return redirect('estoque')
-
-    context = {
-        'form': form,
-        'id': pk
-    }
-
-    return render(request, 'estoque_edit.html', context)
-
+@login_required
 def compra(request):
     compra = Compra.objects.all()
     form = CompraForm(request.POST)
@@ -381,16 +288,20 @@ def compra(request):
 
     return render(request, 'compra.html', context)
 
-def compra_delete(requestt,pk):
+
+@login_required
+def compra_delete(request,pk):
     compra = get_object_or_404(Compra,pk=pk)
     compra.delete()
     return redirect('compra')
 
+
+@login_required
 def compra_edit(request, pk):
 
-    q = get_object_or_404(Compra, pk=pk)
+    compra = get_object_or_404(Compra, pk=pk)
 
-    form = CompraForm(request.POST or None, instance=q)
+    form = CompraForm(request.POST or None, instance=compra)
 
     if form.is_valid():
         form.save()
@@ -398,47 +309,54 @@ def compra_edit(request, pk):
 
     context = {
         'form': form,
-        'id': pk
+        'compra': compra
     }
 
     return render(request, 'compra_edit.html', context)
 
-def tarefas(request):
-    tarefas = Tarefas.objects.all()
-    form = TarefasForm(request.POST)
+
+
+@login_required
+def lote(request):
+    lote = Lote.objects.all()
+    form = LoteForm(request.POST)
 
     if request.method == 'POST':
         if form.is_valid():
             form.save()
             messages.success(request, 'Registrado com sucesso')
-            return redirect('tarefas')
+            return redirect('lote')
 
     context = {
 
         'form': form,
-        'tarefas':tarefas
+        'lote':lote
     }
 
-    return render(request, 'tarefas.html', context)
+    return render(request, 'lote.html', context)
 
-def tarefas_delete(requestt,pk):
-    tarefas = get_object_or_404(Tarefas,pk=pk)
-    tarefas.delete()
-    return redirect('tarefas')
+@login_required
+def lote_delete(request,pk):
+    lote = get_object_or_404(Lote,pk=pk)
+    lote.delete()
+    return redirect('lote')
 
-def tarefas_edit(request, pk):
+@login_required
+def lote_edit(request, pk):
 
-    tarefas = get_object_or_404(Tarefas, pk=pk)
+    lote = get_object_or_404(Lote, pk=pk)
 
-    form = TarefasForm(request.POST or None, instance=tarefas)
+    form = LoteForm(request.POST or None, instance=lote)
 
     if form.is_valid():
         form.save()
-        return redirect('tarefas')
+        return redirect('lote')
 
     context = {
         'form': form,
-        'id': pk
+        'lote': lote
     }
 
-    return render(request, 'tarefas_edit.html', context)
+    return render(request, 'lote_edit.html', context)
+
+

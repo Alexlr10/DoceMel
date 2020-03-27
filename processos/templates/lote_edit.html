@@ -7,7 +7,7 @@
 
 <div class="modal-body">
 
-    <form method="POST" action="{% url 'compra_edit' compra.id  %}">
+    <form method="POST" action="{% url 'lote_edit' lote.id  %}">
         {% csrf_token %}
         {{ form|bootstrap }}
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>

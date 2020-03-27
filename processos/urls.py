@@ -16,8 +16,7 @@ urlpatterns = [
     # USUARIO
     path('usuarios/', views.usuarios, name='usuarios'),
     path('updateusuarios/<int:pk>/', views.usuariosEdit, name='usuarios_edit'),
-    path('usuarios/delete/<pk>',
-         login_required(usuariosDelete.as_view()), name='usuarios_delete'),
+    path('usuarios/delete/<pk>',login_required(usuariosDelete.as_view()), name='usuarios_delete'),
     path('meus_dados/', views.editar_meus_dados, name='meusdados'),
 
     # Cliente
@@ -32,14 +31,18 @@ urlpatterns = [
 
     # Estoque
     path('estoque/', views.estoque, name='estoque'),
-    path('estoque_edit/<int:pk>/', views.estoque_edit, name='estoque_edit'),
-    path('estoque_delete/<int:pk>/', views.estoque_delete, name='estoque_delete'),
+    #path('estoque_edit/<int:pk>/', views.estoque_edit, name='estoque_edit'),
+   # path('estoque_delete/<int:pk>/', views.estoque_delete, name='estoque_delete'),
 
     # Compra
     path('compra/', views.compra, name='compra'),
     path('compra_edit/<int:pk>/', views.compra_edit, name='compra_edit'),
-    path('compra_delete/<int:pk>/', views.compra_delete, name='compra_delete')
+    path('compra_delete/<int:pk>/', views.compra_delete, name='compra_delete'),
 
+    # Compra
+    path('lote/', views.lote, name='lote'),
+    path('lote_edit/<int:pk>/', views.lote_edit, name='lote_edit'),
+    path('lote_delete/<int:pk>/', views.lote_delete, name='lote_delete')
 
 ]
 

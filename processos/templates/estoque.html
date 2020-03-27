@@ -12,13 +12,13 @@
 
 
     <div class="box">
-        <div class="box-header">
+<!--        <div class="box-header">-->
 
-            <button type="button" class="ui-button" data-toggle="modal" data-target="#exampleModal51">Cadastrar
-                Estoque
-            </button>
+<!--            <button type="button" class="ui-button" data-toggle="modal" data-target="#exampleModal51">Cadastrar-->
+<!--                Estoque-->
+<!--            </button>-->
 
-        </div>
+<!--        </div>-->
 
 
         <div class="box-header">
@@ -43,23 +43,12 @@
 
                     {% for u in estoque %}
                     <tr>
-                        <td>{{ u.produto }}</td>
+                        <td>{{ u.produto.nomeproduto }}</td>
                         <td>{{ u.quantidade }}</td>
 
                         </td>
 
 
-
-                        <td>
-                            <a href="{% url 'estoque_edit' u.id %}" data-toggle="modal"
-                               data-target="#myModal{{ u.id }}">
-                                <button type="button" class="btn btn-xs btn-warning">Editar</button>
-                            </a>
-                            <a href="{% url 'estoque_delete' u.id %}">
-                                <button type="button" class="btn btn-xs btn-danger">Apagar</button>
-                            </a>
-
-                        </td>
 
 
                     </tr>
@@ -86,26 +75,26 @@
     </div>
     <!-- /.col -->
 </div>
-<div class="modal fade" id="exampleModal51" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="exampleModalLabel"> Cadastrar Cliente</h4>
-            </div>
-            <div class="modal-body">
-                <form method="POST">
-                    {% csrf_token %} {{ form|bootstrap }}
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Cadastrar</button>
-                </form>
-            </div>
+<!--<div class="modal fade" id="exampleModal51" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">-->
+<!--    <div class="modal-dialog" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--                <h4 class="modal-title" id="exampleModalLabel"> Cadastrar Cliente</h4>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <form method="POST">-->
+<!--                    {% csrf_token %} {{ form|bootstrap }}-->
+<!--                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>-->
+<!--                    <button type="submit" class="btn btn-success">Cadastrar</button>-->
+<!--                </form>-->
+<!--            </div>-->
 
-        </div>
-    </div>
-</div>
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 {% endblock content-main %} {% block extraJS %}
 

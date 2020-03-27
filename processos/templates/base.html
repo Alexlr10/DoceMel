@@ -40,9 +40,9 @@
         <!-- Logo -->
         <a href="{% url 'home' %}" class="logo">
 
-        <span class="logo-mini"><img src="{% static 'images/docemel.png'%}" width="80%" height="80%" /></span>
-        <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><img src="{% static 'images/docemel.png'%}" width="100%" height="100%" /></span>
+<!--        <span class="logo-mini"><img src="{% static 'images/docemel.png'%}" width="80%" height="80%" /></span>-->
+<!--        &lt;!&ndash; logo for regular state and mobile devices &ndash;&gt;-->
+<!--        <span class="logo-lg"><img src="{% static 'images/docemel.png'%}" width="100%" height="100%" /></span>-->
 
         </a>
         <!-- Header Navbar: style can be found in header.less -->
@@ -102,9 +102,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                            <li>
-                                <a   title="Sair"><i class="fa fa-sign-out"></i></a>
-                            </li>
+
                             </li>
                         </ul>
                     </div>
@@ -125,6 +123,7 @@
             <li><a href="{% url 'produto' %}"><i class="fa fa-universal-access"></i>Produtos</a></li>
             <li><a href="{% url 'estoque' %}"><i class="fa fa-universal-access"></i>Estoque</a></li>
             <li><a href="{% url 'compra' %}"><i class="fa fa-universal-access"></i>Compra</a></li>
+            <li><a href="{% url 'lote' %}"><i class="fa fa-universal-access"></i>Lote</a></li>
             <li class="treeview">
 
 

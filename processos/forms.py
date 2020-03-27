@@ -171,6 +171,17 @@ class CompraForm(forms.ModelForm):
         widgets = {
 
             'Data': forms.TextInput(attrs={'type': 'date', 'class': 'form-control'}),
+        }
+
+
+class LoteForm(forms.ModelForm):
+    # data_intimacao = forms.DateField(widget=forms.TextInput(attrs={'format': 'dd/mm/yyyy', 'type': 'date'}))
+
+    class Meta:
+        model = Lote
+        fields = '__all__'
+
+        widgets = {
 
         }
 

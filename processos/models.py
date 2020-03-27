@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save, post_delete
+from django.db.models import Sum
 
 
 FUNCAO_CHOICE = (
@@ -182,42 +183,6 @@ class Cliente(models.Model):
     def __str__(self):
         return self.nome
 
-class Fornecedor(models.Model):
-
-    nome = models.CharField(_('Nome:'), max_length=30, null=True, blank=True)
-    cidade = models.CharField(_('Cidade'), max_length=80, null=True, blank=True)
-    bairro = models.CharField(_('Bairro'), max_length=20, null=True, blank=True)
-    rua = models.CharField(_('Rua'), max_length=80, null=True, blank=True)
-    numero = models.CharField(_('Numero'), max_length=20, null=True, blank=True)
-    cep = models.CharField(_('CEP'), max_length=15, null=True, blank=True)
-    cnpj = models.CharField(_('CNPJ'), max_length=15, null=True, blank=True)
-    contato = models.CharField(_('Contato'), max_length=20, null=True, blank=True)
-
-    class Meta:
-        verbose_name = _("Fornecedor")
-        verbose_name_plural = _("Fornecedor")
-
-    def __str__(self):
-        return self.nome
-
-class Funcionario(models.Model):
-
-    nome = models.CharField(_('Nome:'), max_length=30, null=True, blank=True)
-    sobrenome = models.CharField(_('Sobrenome'), max_length=30, null=True, blank=True)
-    cidade = models.CharField(_('Cidade'), max_length=80, null=True, blank=True)
-    bairro = models.CharField(_('Bairro'), max_length=20, null=True, blank=True)
-    rua = models.CharField(_('Rua'), max_length=80, null=True, blank=True)
-    numero = models.CharField(_('Numero'), max_length=20, null=True, blank=True)
-    cep = models.CharField(_('CEP'), max_length=15, null=True, blank=True)
-    ssn = models.CharField(_('Ssn'),max_length=30,null=True,blank=True)
-    salario = models.DecimalField('Salario', max_digits=6, decimal_places=2)
-
-    class Meta:
-        verbose_name = _("Funcionario")
-        verbose_name_plural = _("Funcionario")
-
-    def __str__(self):
-        return self.nome
 
 
 class Produto(models.Model):
@@ -232,10 +197,27 @@ class Produto(models.Model):
     def __str__(self):
         return self.nomeproduto
 
+
+class Lote(models.Model):
+    numeroLote = models.IntegerField('Nº do lote', blank=True, null=True)
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='produto')
+    quantidade = models.IntegerField('Quantidade', blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Lote")
+        verbose_name_plural = _("Lotes")
+
+    def __str__(self):
+        return self.produto.nomeproduto
+
+    def __str__(self):
+        return str(self.quantidade)
+
+
 class Estoque(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='Produto')
     quantidade = models.IntegerField('Quantidade', blank=True, null=True)
-
+    lote = models.ForeignKey(Lote, on_delete=models.CASCADE, related_name='Lote')
 
     class Meta:
         verbose_name = _("Estoque")
@@ -243,6 +225,7 @@ class Estoque(models.Model):
 
     def __str__(self):
         return self.produto.nomeproduto
+
 
 
 class Compra(models.Model):
@@ -260,6 +243,10 @@ class Compra(models.Model):
         return self.Cliente.nome
     def __str__(self):
         return self.Produto.nomeproduto
+
+
+
+
 
 
 
