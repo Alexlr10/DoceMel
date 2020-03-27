@@ -35,29 +35,11 @@ urlpatterns = [
     path('estoque_edit/<int:pk>/', views.estoque_edit, name='estoque_edit'),
     path('estoque_delete/<int:pk>/', views.estoque_delete, name='estoque_delete'),
 
-    # Fornecedor
-    path('fornecedor/', views.fornecedor, name='fornecedor'),
-    path('fornecedor_edit/<int:pk>/', views.fornecedor_edit, name='fornecedor_edit'),
-    path('fornecedor_delete/<int:pk>/', views.fornecedor_delete, name='fornecedor_delete'),
-
-    # Funcionario
-    path('funcionario/', views.funcionario, name='funcionario'),
-    path('funcionario_edit/<int:pk>/', views.funcionario_edit, name='funcionario_edit'),
-    path('funcionario_delete/<int:pk>/', views.funcionario_delete, name='funcionario_delete'),
-
-
-
-
-
-
-
     # Compra
     path('compra/', views.compra, name='compra'),
     path('compra_edit/<int:pk>/', views.compra_edit, name='compra_edit'),
-    path('compra_delete/<int:pk>/', views.compra_delete, name='compra_delete'),
+    path('compra_delete/<int:pk>/', views.compra_delete, name='compra_delete')
 
-    # tarefas
-    path('tarefas/', views.tarefas, name='tarefas'),
-    path('tarefas_edit/<int:pk>/', views.tarefas_edit, name='tarefas_edit'),
-    path('tarefas_delete/<int:pk>/', views.tarefas_delete, name='tarefas_delete'),
+
 ]
+

@@ -249,9 +249,7 @@ class Compra(models.Model):
     Cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='Clientes')
     Produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='Produtos')
     quantidade = models.IntegerField('Unidades', blank=True, null=True)
-    Funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE, related_name='Funcionarios')
-    valor = models.DecimalField('Preco', max_digits=6, decimal_places=2)
-    Data = models.DateTimeField('Data', blank=True, null=True)
+    Data = models.DateField('Data', blank=True, null=True)
 
     class Meta:
         verbose_name = _("Compra")
@@ -262,18 +260,9 @@ class Compra(models.Model):
         return self.Cliente.nome
     def __str__(self):
         return self.Produto.nomeproduto
-    def __str__(self):
-        return self.Funcionario.nome
 
 
-class Tarefas(models.Model):
 
-    nome = models.CharField(_('nome'), max_length=30, null=True, blank=True)
-    descricao = models.TextField('descrição', null=True, blank=True)
-
-    class Meta:
-        verbose_name = _("Tarefa")
-        verbose_name_plural = _("tarefas")
 
 
 

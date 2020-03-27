@@ -163,51 +163,19 @@ class EstoqueForm(forms.ModelForm):
 
 
 class CompraForm(forms.ModelForm):
-    # data_intimacao = forms.DateField(widget=forms.TextInput(attrs={'format': 'dd/mm/yyyy', 'type': 'date'}))
 
     class Meta:
         model = Compra
         fields = '__all__'
-        # exclude = ['data_cadastro', 'data_atualizacao']
 
         widgets = {
+
+            'Data': forms.TextInput(attrs={'type': 'date', 'class': 'form-control'}),
 
         }
 
 
-class FuncionarioForm(forms.ModelForm):
-    # data_intimacao = forms.DateField(widget=forms.TextInput(attrs={'format': 'dd/mm/yyyy', 'type': 'date'}))
-
-    class Meta:
-        model = Funcionario
-        fields = '__all__'
-        # exclude = ['data_cadastro', 'data_atualizacao']
-
-        widgets = {
-
-        }
 
 
-class FornecedorForm(forms.ModelForm):
-    # data_intimacao = forms.DateField(widget=forms.TextInput(attrs={'format': 'dd/mm/yyyy', 'type': 'date'}))
-
-    class Meta:
-        model = Fornecedor
-        fields = '__all__'
-        exclude = ['sobrenome']
-
-        widgets = {
-
-        }
-
-class TarefasForm(forms.ModelForm):
-    # data_intimacao = forms.DateField(widget=forms.TextInput(attrs={'format': 'dd/mm/yyyy', 'type': 'date'}))
-
-    class Meta:
-        model = Tarefas
-        fields = '__all__'
 
 
-        widgets = {
-
-        }

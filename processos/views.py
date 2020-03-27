@@ -375,7 +375,6 @@ def compra(request):
             return redirect('compra')
 
     context = {
-
         'form': form,
         'compra':compra
     }
