@@ -11,11 +11,12 @@
     <!-- /.box -->
 
 
-
     <div class="box">
         <div class="box-header">
 
-            <button type="button" class="ui-button" data-toggle="modal" data-target="#exampleModal51">Cadastrar Cliente</button>
+            <button type="button" class="ui-button" data-toggle="modal" data-target="#exampleModal51">Cadastrar
+                Cliente
+            </button>
 
         </div>
 
@@ -25,40 +26,38 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-                <div class="table-responsive">
-                        <table id="tabela" class="table no-margin table-bordered" style="font-size: 13px">
+            <div class="table-responsive">
+                <table id="tabela" class="table no-margin table-bordered" style="font-size: 13px">
 
-    <thead>
+                    <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>CPF</th>
-                        <th>Gênero</th>
-                        <th>E-mail</th>
+                        <th>Contato</th>
+                        <th>Email</th>
+                        <th>Cidade</th>
                         <th>Bairro</th>
-
-                        <th>Telefone</th>
+                        <th>Rua</th>
+                        <th>Nº</th>
                         <th>Ações</th>
 
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
 
                     {% for u in cliente %}
                     <tr>
-                         <td>{{ u.nome }}</td>
-                         <td>{{ u.sobrenome }}</td>
-                        <td>{{ u.cep }}</td>
+                        <td>{{ u.nome }}</td>
+                        <td>{{ u.contato }}</td>
+                        <td>{{ u.email}}</td>
                         <td>{{ u.cidade }}</td>
                         <td>{{ u.bairro}}</td>
-                        <td>{{ u.cpf}}</td>
+                        <td>{{ u.rua}}</td>
+                        <td>{{ u.numero}}</td>
 
-
-                        </td>
-
-                        <td>{{ u.contato}}</td>
 
                         <td>
-                            <a href="{% url 'cliente_edit' u.id %}" data-toggle="modal" data-target="#myModal{{ u.id }}">
+                            <a href="{% url 'cliente_edit' u.id %}" data-toggle="modal"
+                               data-target="#myModal{{ u.id }}">
                                 <button type="button" class="btn btn-xs btn-warning">Editar</button>
                             </a>
                             <a href="{% url 'cliente_delete' u.id %}">
@@ -68,11 +67,11 @@
                         </td>
 
 
-
                     </tr>
 
 
-                    <div class="modal fade" id="myModal{{ u.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                    <div class="modal fade" id="myModal{{ u.id }}" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
 
@@ -81,18 +80,16 @@
                     </div>
 
 
-
                     {% endfor %}
 
 
-
                     </tfoot>
-            </table>
+                </table>
+            </div>
+            <!-- /.box-body -->
         </div>
-        <!-- /.box-body -->
     </div>
-</div>
-<!-- /.col -->
+    <!-- /.col -->
 </div>
 <div class="modal fade" id="exampleModal51" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
@@ -118,8 +115,6 @@
 {% endblock content-main %} {% block extraJS %}
 
 <script>
-
-
 
 
     $(document).ready(function () {

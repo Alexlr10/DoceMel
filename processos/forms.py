@@ -133,6 +133,16 @@ class ClienteForm(forms.ModelForm):
 
         widgets = {
 
+            'nome': forms.TextInput(attrs={'placeholder': 'Nome'}),
+            'cpf': forms.TextInput(attrs={'id': 'cpf', 'placeholder': '___.___.___-__'}),
+            'rua': forms.TextInput(attrs={'placeholder': 'Rua'}),
+            'bairro': forms.TextInput(attrs={'placeholder': 'Bairro'}),
+            'cidade': forms.TextInput(attrs={'placeholder': 'Cidade'}),
+            'numero': forms.TextInput(attrs={'placeholder': 'Numero'}),
+            'cep': forms.TextInput(attrs={'placeholder': 'CEP'}),
+            'contato': forms.TextInput(attrs={'placeholder': 'Contato'}),
+
+            'email': forms.TextInput(attrs={'placeholder': 'E-mail '}),
         }
 
 
