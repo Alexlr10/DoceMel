@@ -95,7 +95,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="exampleModalLabel"> Cadastrar Cliente</h4>
+                <h4 class="modal-title" id="exampleModalLabel"> Cadastrar Produto</h4>
             </div>
             <div class="modal-body">
                 <form method="POST">
@@ -110,6 +110,19 @@
 </div>
 
 {% endblock content-main %} {% block extraJS %}
+
+
+<script type="text/javascript">
+
+    $(function(){
+	 var campo = $("#id_nomeproduto");
+	 campo.keyup(function(e){
+		 e.preventDefault();
+		 campo.val($(this).val().toUpperCase());
+	 });
+ });
+</script>
+
 
 <script>
 
@@ -127,12 +140,12 @@
 </script>
 
 
+
 <script type="text/javascript">
     $("#phone").mask("(00) 0000-0000");
     $("#cel1").mask("(00) 0 0000-0000");
     $("#cel2").mask("(00) 0 0000-0000");
     $("#cpf").mask("000.000.000-00");
-
 
 </script>
 

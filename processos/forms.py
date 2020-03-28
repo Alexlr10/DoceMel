@@ -167,7 +167,7 @@ class CompraForm(forms.ModelForm):
     class Meta:
         model = Compra
         fields = '__all__'
-
+        exclude = ['Lote']
         widgets = {
 
             'Data': forms.TextInput(attrs={'type': 'date', 'class': 'form-control'}),

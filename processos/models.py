@@ -195,13 +195,13 @@ class Produto(models.Model):
         verbose_name_plural = _("Produtos")
 
     def __str__(self):
-        return self.nomeproduto
+        return self.nomeproduto.upper()
 
 
 class Lote(models.Model):
     numeroLote = models.IntegerField('Nº do lote', blank=True, null=True)
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='produto')
-    quantidade = models.IntegerField('Quantidade', blank=True, null=True)
+    quantLote = models.IntegerField('quantLote', blank=True, null=True)
 
     class Meta:
         verbose_name = _("Lote")
@@ -209,25 +209,13 @@ class Lote(models.Model):
 
 
 
-class Estoque(models.Model):
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='Produto')
-    quantidade = models.IntegerField('Quantidade', blank=True, null=True)
-    lote = models.ForeignKey(Lote, on_delete=models.CASCADE, related_name='Lote')
-
-    class Meta:
-        verbose_name = _("Estoque")
-        verbose_name_plural = _("Estoques")
-
-    def __str__(self):
-        return self.produto.nomeproduto
-
-
 
 class Compra(models.Model):
     Cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='Clientes')
     Produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='Produtos')
-    quantidade = models.IntegerField('Unidades', blank=True, null=True)
+    quantCompra = models.IntegerField('quantCompra', blank=True, null=True)
     Data = models.DateField('Data', blank=True, null=True)
+
 
     class Meta:
         verbose_name = _("Compra")
@@ -236,8 +224,23 @@ class Compra(models.Model):
 
     def __str__(self):
         return self.Cliente.nome
+
     def __str__(self):
-        return self.Produto.nomeproduto
+        return Produto.nomeproduto
+
+    def __str__(self):
+        return str(self.quantCompra)
+
+
+class Estoque(models.Model):
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='produtos')
+    quantCompra = models.IntegerField('quantCompra', blank=True, null=True)
+    quantLote = models.IntegerField('quantLote', blank=True, null=True)
+
+
+    class Meta:
+        verbose_name = _("Estoque")
+        verbose_name_plural = _("Estoques")
 
 
 

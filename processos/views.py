@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Model
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
@@ -205,6 +205,7 @@ def produto(request):
     produto = Produto.objects.all()
     form = ProdutoForm(request.POST)
 
+    print(produto)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
@@ -243,13 +244,26 @@ def produto_edit(request, pk):
 
     return render(request, 'produto_edit.html', context)
 
+
+
 @login_required
 def estoque(request):
-    produto = Produto.objects.values('nomeproduto')
-    lote = Lote.objects.select_related('produto').values('produto__nomeproduto').annotate(quantidade = Sum('quantidade')) #.aggregate(Sum('quantidade'))
+    #produto = Produto.objects.values('nomeproduto')
+    #lote = Lote.objects.select_related('produto').values('produto__nomeproduto').annotate(quantLote = Sum('quantLote'))
+    #compra = Compra.objects.select_related('produto').values('Produto__nomeproduto').annotate(quantCompra = Sum('quantCompra'))
+
+  #  estoque = Compra.objects.select_related('Lote')
+    #estoque = Produto.objects.raw('SELECT * FROM processos_produto')
+
+    lote = Compra.objects.raw("select DISTINCT pp.id, pp.nomeproduto, Sum(pl.quantLote) as "
+                              "lote from processos_produto pp join "
+                              "processos_lote pl join processos_compra pc "
+                              "WHERE pp.id = pl.produto_id and pc.Produto_id = pp.id GROUP by pc.id")
+
+
 
     form = EstoqueForm(request.POST)
-    print(lote)
+
 
     if request.method == 'POST':
         if form.is_valid():
@@ -260,7 +274,7 @@ def estoque(request):
     context = {
 
         'form': form,
-        'produto':produto,
+       # 'estoque':estoque,
         'lote':lote
     }
 
