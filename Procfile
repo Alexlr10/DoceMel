@@ -1,0 +1,1 @@
+web: gunicorn docemel.wsgi --log-file -
