@@ -292,10 +292,13 @@ def estoque(request):
 
 @login_required
 def compra(request):
-    compra = Compra.objects.raw("SELECT DISTINCT pcl.id,pcl.nome, pp.nomeproduto,pc.quantcompra,"
-                                "(pp.valor*pc.quantCompra)as valor, pc.Data FROM processos_compra pc "
+    compra = Compra.objects.raw("SELECT DISTINCT pp.id,pcl.nome, "
+                                "pp.nomeproduto,pc.quantcompra, "
+                                "(pp.valor*pc.quantCompra)as valor, pc.Data "
+                                "FROM processos_compra pc  "
                                 "join processos_cliente pcl join processos_produto pp "
-                                "where pcl.id = pc.Cliente_id and pp.id = pc.Produto_id")
+                                "where pcl.id = pc.Cliente_id "
+                                "and pp.id = pc.Produto_id")
 
     form = CompraForm(request.POST)
 
