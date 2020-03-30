@@ -1,1 +1,1 @@
-web: gunicorn processos.wsgi --log-file -
+web: gunicorn docemel:app --log-file -
