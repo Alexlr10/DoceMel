@@ -223,7 +223,7 @@ class Estoque(models.Model):
 class Compra(models.Model):
     Cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='Clientes')
     Produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='Produtos')
-    quantCompra = models.IntegerField('quantCompra', blank=True, null=True)
+    quantCompra = models.IntegerField('Quantidade', blank=True, null=True)
     Data = models.DateField('Data', blank=True, null=True)
 
 

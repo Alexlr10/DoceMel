@@ -257,11 +257,9 @@ def estoque(request):
 
     lote = Compra.objects.raw("SELECT DISTINCT id, nomeproduto,Sum(lote) as lote,Sum(compra) as compra, "
                               " (Sum(lote)-Sum(compra)) as total "
-                              "from (Select DISTINCT pp.id, pp.nomeproduto ,NULL as Lote, Sum(pc.quantCompra) as compra "
-                              "from processos_produto pp join processos_compra pc "
-                              "where pp.id = pc.Produto_id GROUP by pp.nomeproduto UNION "
+                              "from (Select DISTINCT pp.id, pp.nomeproduto ,NULL as Lote, Sum(pc.quantCompra) as compra  from processos_produto pp join processos_compra pc WHERE pp.id = pc.Produto_id GROUP by pp.nomeproduto UNION "
                               "select DISTINCT pp.id, pp.nomeproduto, Sum(pl.quantlote) as lote, NULL from processos_lote pl "
-                              "join processos_produto pp where pp.id = pl.produto_id "
+                              "join processos_produto pp WHERE pp.id = pl.produto_id "
                               "group by pp.nomeproduto ) GROUP by nomeproduto")
 
 
