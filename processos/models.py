@@ -201,7 +201,7 @@ class Produto(models.Model):
 class Lote(models.Model):
     numeroLote = models.IntegerField('Nº do lote', blank=True, null=True)
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='produto')
-    quantLote = models.IntegerField('quantLote', blank=True, null=True)
+    quantLote = models.IntegerField('Quantidade', blank=True, null=True)
 
     class Meta:
         verbose_name = _("Lote")
