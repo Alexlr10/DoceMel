@@ -1,1 +1,1 @@
-web: gunicorn legacy.wsgi.py --log-file -
+web: gunicorn processos.wsgi --log-file -
