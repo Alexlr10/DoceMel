@@ -1,1 +1,1 @@
-web: gunicorn legacy.wsgi --log-file -
+web: gunicorn dlcpolpas.wsgi --log-file -
