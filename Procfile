@@ -1,1 +1,1 @@
-web: gunicorn docemel.legacy.wsgi --log-file -
+web: gunicorn legacy.wsgi --log-file -
