@@ -247,20 +247,7 @@ def produto_edit(request, pk):
 
 @login_required
 def estoque(request):
-    #produto = Produto.objects.values('nomeproduto')
-    lote = Lote.objects.select_related('produto').values('produto__nomeproduto').annotate(quantLote = Sum('quantLote'))
-    compra = Compra.objects.select_related('produto').values('Produto__nomeproduto').annotate(quantCompra = Sum('quantCompra'))
 
-  #  estoque = Compra.objects.select_related('Lote')
-    #estoque = Produto.objects.raw('SELECT * FROM processos_produto')
-
-    # lote = Compra.objects.raw("SELECT DISTINCT id, nomeproduto,Sum(lote) as lote,Sum(compra) as compra, "
-    #                           " (Sum(lote)-Sum(compra)) as total "
-    #                           "from (Select DISTINCT pp.id, pp.nomeproduto ,NULL as Lote, Sum(pc.quantCompra) as compra  from processos_produto pp join processos_compra pc WHERE pp.id = pc.Produto_id GROUP by pp.nomeproduto UNION "
-    #                           "select DISTINCT pp.id, pp.nomeproduto, Sum(pl.quantlote) as lote, NULL from processos_lote pl "
-    #                           "join processos_produto pp WHERE pp.id = pl.produto_id "
-    #                           "group by pp.nomeproduto ) GROUP by nomeproduto")
-    #
     estoque = Compra.objects.raw('''select distinct processos_produto.id,nomeproduto,
                                 (select sum(processos_compra."quantCompra")from processos_compra 
                                 where processos_compra."Produto_id" = processos_produto.id) 
@@ -294,17 +281,13 @@ def estoque(request):
 
 @login_required
 def compra(request):
-    compra = Compra.objects.raw("SELECT DISTINCT pp.id,pcl.nome, "
-                                "pp.nomeproduto,pc.quantcompra, "
-                                "(pp.valor*pc.quantCompra)as valor, pc.Data "
-                                "FROM processos_compra pc  "
-                                "join processos_cliente pcl join processos_produto pp "
-                                "where pcl.id = pc.Cliente_id "
-                                "and pp.id = pc.Produto_id")
-
-    compra = Compra.objects.select_related('Cliente')
-
-    print(compra)
+    compra = Compra.objects.raw('''SELECT processos_cliente.id, processos_cliente.nome, 
+                                    processos_compra."Data", processos_produto.nomeproduto, 
+                                    processos_produto.valor, processos_compra."quantCompra",
+                                    valor*"quantCompra" as total FROM  public.processos_compra, 
+                                    public.processos_cliente, public.processos_produto WHERE 
+                                    processos_compra."Produto_id" = processos_produto.id AND
+                                    processos_cliente.id = processos_compra."Cliente_id";''')
 
     form = CompraForm(request.POST)
 
