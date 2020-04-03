@@ -7,7 +7,7 @@ from .models import *
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.db import connection
 
 @login_required
 class usuariosUpdate(UpdateView):
@@ -245,25 +245,31 @@ def produto_edit(request, pk):
     return render(request, 'produto_edit.html', context)
 
 
-
 @login_required
 def estoque(request):
     #produto = Produto.objects.values('nomeproduto')
-    #lote = Lote.objects.select_related('produto').values('produto__nomeproduto').annotate(quantLote = Sum('quantLote'))
-    #compra = Compra.objects.select_related('produto').values('Produto__nomeproduto').annotate(quantCompra = Sum('quantCompra'))
+    lote = Lote.objects.select_related('produto').values('produto__nomeproduto').annotate(quantLote = Sum('quantLote'))
+    compra = Compra.objects.select_related('produto').values('Produto__nomeproduto').annotate(quantCompra = Sum('quantCompra'))
 
   #  estoque = Compra.objects.select_related('Lote')
     #estoque = Produto.objects.raw('SELECT * FROM processos_produto')
 
-    lote = Compra.objects.raw("SELECT DISTINCT id, nomeproduto,Sum(lote) as lote,Sum(compra) as compra, "
-                              " (Sum(lote)-Sum(compra)) as total "
-                              "from (Select DISTINCT pp.id, pp.nomeproduto ,NULL as Lote, Sum(pc.quantCompra) as compra  from processos_produto pp join processos_compra pc WHERE pp.id = pc.Produto_id GROUP by pp.nomeproduto UNION "
-                              "select DISTINCT pp.id, pp.nomeproduto, Sum(pl.quantlote) as lote, NULL from processos_lote pl "
-                              "join processos_produto pp WHERE pp.id = pl.produto_id "
-                              "group by pp.nomeproduto ) GROUP by nomeproduto")
-
-
-    estoque = Estoque.objects.all()
+    # lote = Compra.objects.raw("SELECT DISTINCT id, nomeproduto,Sum(lote) as lote,Sum(compra) as compra, "
+    #                           " (Sum(lote)-Sum(compra)) as total "
+    #                           "from (Select DISTINCT pp.id, pp.nomeproduto ,NULL as Lote, Sum(pc.quantCompra) as compra  from processos_produto pp join processos_compra pc WHERE pp.id = pc.Produto_id GROUP by pp.nomeproduto UNION "
+    #                           "select DISTINCT pp.id, pp.nomeproduto, Sum(pl.quantlote) as lote, NULL from processos_lote pl "
+    #                           "join processos_produto pp WHERE pp.id = pl.produto_id "
+    #                           "group by pp.nomeproduto ) GROUP by nomeproduto")
+    #
+    estoque = Compra.objects.raw('''select distinct processos_produto.id,nomeproduto,
+                                (select sum(processos_compra."quantCompra")from processos_compra 
+                                where processos_compra."Produto_id" = processos_produto.id) 
+                                as SomaCompras, (select sum(processos_lote."quantLote")
+                                from processos_lote where processos_produto.id = processos_lote.Produto_id)
+                                as SomaLote ,((select sum(processos_lote."quantLote") from processos_lote
+                                where processos_produto.id = processos_lote.Produto_id) - (select sum(processos_compra."quantCompra")
+                                from processos_compra where processos_compra."Produto_id" = processos_produto.id )  )
+                                as total from processos_produto''')
 
     form = EstoqueForm(request.POST)
 
@@ -278,10 +284,8 @@ def estoque(request):
 
         'form': form,
         'estoque':estoque,
-        'lote':lote
+
     }
-
-
 
     return render(request, 'estoque.html', context)
 
@@ -290,13 +294,13 @@ def estoque(request):
 
 @login_required
 def compra(request):
-    # compra = Compra.objects.raw("SELECT DISTINCT pp.id,pcl.nome, "
-    #                             "pp.nomeproduto,pc.quantcompra, "
-    #                             "(pp.valor*pc.quantCompra)as valor, pc.Data "
-    #                             "FROM processos_compra pc  "
-    #                             "join processos_cliente pcl join processos_produto pp "
-    #                             "where pcl.id = pc.Cliente_id "
-    #                             "and pp.id = pc.Produto_id")
+    compra = Compra.objects.raw("SELECT DISTINCT pp.id,pcl.nome, "
+                                "pp.nomeproduto,pc.quantcompra, "
+                                "(pp.valor*pc.quantCompra)as valor, pc.Data "
+                                "FROM processos_compra pc  "
+                                "join processos_cliente pcl join processos_produto pp "
+                                "where pcl.id = pc.Cliente_id "
+                                "and pp.id = pc.Produto_id")
 
     compra = Compra.objects.select_related('Cliente')
 

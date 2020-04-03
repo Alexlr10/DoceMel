@@ -207,16 +207,21 @@ class Lote(models.Model):
         verbose_name = _("Lote")
         verbose_name_plural = _("Lotes")
 
+    def __str__(self):
+        return self.produto.nomeproduto
+
+
+
 class Estoque(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='produtos')
     lote = models.ForeignKey(Lote, on_delete=models.CASCADE, related_name='lote')
-    quantCompra = models.IntegerField('quantCompra', blank=True, null=True)
-    quantLote = models.IntegerField('quantLote', blank=True, null=True)
-
 
     class Meta:
         verbose_name = _("Estoque")
         verbose_name_plural = _("Estoques")
+
+    def __str__(self):
+        return self.lote.quantLote
 
 
 
