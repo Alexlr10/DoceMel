@@ -281,7 +281,7 @@ def estoque(request):
 
 @login_required
 def compra(request):
-    compra = Compra.objects.raw('''SELECT processos_cliente.id, processos_cliente.nome, 
+    compra = Compra.objects.raw('''SELECT processos_compra.id, processos_cliente.nome, 
                                     processos_compra."Data", processos_produto.nomeproduto, 
                                     processos_produto.valor, processos_compra."quantCompra",
                                     valor*"quantCompra" as total FROM  public.processos_compra, 
