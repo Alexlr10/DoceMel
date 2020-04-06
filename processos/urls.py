@@ -39,10 +39,15 @@ urlpatterns = [
     path('compra_edit/<int:pk>/', views.compra_edit, name='compra_edit'),
     path('compra_delete/<int:pk>/', views.compra_delete, name='compra_delete'),
 
-    # Compra
+    # lote
     path('lote/', views.lote, name='lote'),
     path('lote_edit/<int:pk>/', views.lote_edit, name='lote_edit'),
-    path('lote_delete/<int:pk>/', views.lote_delete, name='lote_delete')
+    path('lote_delete/<int:pk>/', views.lote_delete, name='lote_delete'),
+
+  # Despesas
+    path('despesa/', views.despesa, name='despesa'),
+    path('despesa_edit/<int:pk>/', views.despesa_edit, name='despesa_edit'),
+    path('despesa_delete/<int:pk>/', views.despesa_delete, name='despesa_delete')
 
 ]
 

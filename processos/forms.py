@@ -195,6 +195,18 @@ class LoteForm(forms.ModelForm):
 
         }
 
+class DespesasForm(forms.ModelForm):
+    # data_intimacao = forms.DateField(widget=forms.TextInput(attrs={'format': 'dd/mm/yyyy', 'type': 'date'}))
+
+    class Meta:
+        model = Despesas
+        fields = '__all__'
+
+        widgets = {
+
+        }
+
+
 
 
 

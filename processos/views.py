@@ -377,3 +377,46 @@ def lote_edit(request, pk):
     return render(request, 'lote_edit.html', context)
 
 
+@login_required
+def despesa(request):
+    despesa = Despesas.objects.all()
+    form = DespesasForm(request.POST)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registrado com sucesso')
+            return redirect('despesa')
+
+    context = {
+
+        'form': form,
+        'despesa':despesa
+    }
+
+    return render(request, 'despesa.html', context)
+
+@login_required
+def despesa_delete(request,pk):
+    despesa = get_object_or_404(Despesas,pk=pk)
+    despesa.delete()
+    return redirect('despesa')
+
+@login_required
+def despesa_edit(request, pk):
+
+    despesa = get_object_or_404(Despesas, pk=pk)
+
+    form = DespesasForm(request.POST or None, instance=despesa)
+
+    if form.is_valid():
+        form.save()
+        return redirect('despesa')
+
+    context = {
+        'form': form,
+        'despesa': despesa
+    }
+
+    return render(request, 'despesa_edit.html', context)
+

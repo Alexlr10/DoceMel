@@ -18,15 +18,14 @@ FUNCAO_CHOICE = (
     ('PSI', 'Psicólogo'),
 )
 
-FUNCAO_CHOICE_PROF = (
-    ('ADM', 'Administrador'),
-    ('MED', 'Médico'),
-    ('FARM','Farmaceutico'),
-    ('NUT', 'Nutricionista'),
-    ('PSI', 'Psicólogo'),
-    ('FIS', 'Fisioterapeuta'),
-)
+FUNCAO_CHOICE_DESPESA = (
+    ('ICMS','ICMS'),
+    ('SN','Simples-Nacional'),
+    ('GAS', 'Gasolina'),
+    ('PROD', 'Produtos'),
+    ('INSS', 'INSS'),
 
+)
 GENERO_CHOICE = (
     ('M', 'Masculino'),
     ('F', 'Feminino'),
@@ -246,6 +245,14 @@ class Compra(models.Model):
     def __str__(self):
         return str(self.quantCompra)
 
+
+class Despesas(models.Model):
+    despesa = models.CharField('Despesa', max_length=4, choices=FUNCAO_CHOICE_DESPESA)
+    valor = models.DecimalField('valor', max_digits=6, decimal_places=2)
+
+    class Meta:
+        verbose_name = _("Despesa")
+        verbose_name_plural = _("Despesas")
 
 
 
