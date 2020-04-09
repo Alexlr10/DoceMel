@@ -47,7 +47,12 @@ urlpatterns = [
   # Despesas
     path('despesa/', views.despesa, name='despesa'),
     path('despesa_edit/<int:pk>/', views.despesa_edit, name='despesa_edit'),
-    path('despesa_delete/<int:pk>/', views.despesa_delete, name='despesa_delete')
+    path('despesa_delete/<int:pk>/', views.despesa_delete, name='despesa_delete'),
+
+    #Balanco
+    path('balanco/', views.balanco, name='balanco'),
+    path('balanco_edit/<int:pk>/', views.balanco_edit, name='balanco_edit'),
+    path('balanco_delete/<int:pk>/', views.balanco_delete, name='balanco_delete'),
 
 ]
 

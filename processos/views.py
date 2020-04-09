@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.db.models import Count, Model
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -420,3 +422,53 @@ def despesa_edit(request, pk):
 
     return render(request, 'despesa_edit.html', context)
 
+@login_required
+def balanco(request):
+
+    balanco = Balanco.objects.raw('''SELECT 1 as id,to_char(processos_balanco."datas", 'MM-YYYY') as periodo, 
+                                    sum(compra) as rendimento, sum(despesa) as despesa, (sum(compra) - sum(despesa)) as total
+                                      FROM public.processos_balanco GROUP BY to_char(processos_balanco."datas", 'MM-YYYY') ''')
+
+    balancoCompleto = Balanco.objects.all()
+
+    form = BalancoForm(request.POST)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registrado com sucesso')
+            return redirect('balanco')
+
+    context = {
+
+        'form': form,
+        'balanco':balanco,
+        'balancoCompleto':balancoCompleto,
+
+    }
+
+    return render(request, 'balanco.html', context)
+
+@login_required
+def balanco_delete(request,pk):
+    balanco = get_object_or_404(Balanco,pk=pk)
+    balanco.delete()
+    return redirect('balanco')
+
+@login_required
+def balanco_edit(request, pk):
+
+    balanco = get_object_or_404(Balanco, pk=pk)
+
+    form = BalancoForm(request.POST or None, instance=balanco)
+
+    if form.is_valid():
+        form.save()
+        return redirect('balanco')
+
+    context = {
+        'form': form,
+        'balanco': balanco
+    }
+
+    return render(request, 'balanco_edit.html', context)

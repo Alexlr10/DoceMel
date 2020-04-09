@@ -163,7 +163,7 @@ class EstoqueForm(forms.ModelForm):
     # data_intimacao = forms.DateField(widget=forms.TextInput(attrs={'format': 'dd/mm/yyyy', 'type': 'date'}))
 
     class Meta:
-        model = Estoque
+        model = Compra
         fields = '__all__'
         # exclude = ['data_cadastro', 'data_atualizacao']
 
@@ -177,7 +177,6 @@ class CompraForm(forms.ModelForm):
     class Meta:
         model = Compra
         fields = '__all__'
-        exclude = ['Lote']
         widgets = {
 
             'Data': forms.TextInput(attrs={'type': 'date', 'class': 'form-control'}),
@@ -204,10 +203,21 @@ class DespesasForm(forms.ModelForm):
 
         widgets = {
 
+            'data': forms.TextInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
 
 
+class BalancoForm(forms.ModelForm):
+    # data_intimacao = forms.DateField(widget=forms.TextInput(attrs={'format': 'dd/mm/yyyy', 'type': 'date'}))
 
+    class Meta:
+        model = Balanco
+        fields = '__all__'
+
+        widgets = {
+
+            'datas': forms.TextInput(attrs={'type': 'date', 'class': 'form-control'}),
+        }
 
 
 

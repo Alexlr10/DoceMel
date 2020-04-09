@@ -1,3 +1,4 @@
+from django.core.serializers import json
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
@@ -26,6 +27,23 @@ FUNCAO_CHOICE_DESPESA = (
     ('INSS', 'INSS'),
 
 )
+
+FUNCAO_CHOICE_MESES = (
+    ('01','Janeiro'),
+    ('02','Fevereiro'),
+    ('03', 'Março'),
+    ('04', 'Abril'),
+    ('05', 'Maio'),
+    ('06', 'Junho'),
+    ('07', 'Julho'),
+    ('08', 'Agosto'),
+    ('09', 'Setembro'),
+    ('10', 'Outubro'),
+    ('11', 'Novembro'),
+    ('12', 'Dezembro'),
+
+)
+
 GENERO_CHOICE = (
     ('M', 'Masculino'),
     ('F', 'Feminino'),
@@ -211,17 +229,6 @@ class Lote(models.Model):
 
 
 
-class Estoque(models.Model):
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='produtos')
-    lote = models.ForeignKey(Lote, on_delete=models.CASCADE, related_name='lote')
-
-    class Meta:
-        verbose_name = _("Estoque")
-        verbose_name_plural = _("Estoques")
-
-    def __str__(self):
-        return self.lote.quantLote
-
 
 
 class Compra(models.Model):
@@ -245,9 +252,9 @@ class Compra(models.Model):
     def __str__(self):
         return str(self.quantCompra)
 
-
 class Despesas(models.Model):
     despesa = models.CharField('Despesa', max_length=4, choices=FUNCAO_CHOICE_DESPESA)
+    data = models.DateField('data', blank=True, null=True)
     valor = models.DecimalField('valor', max_digits=6, decimal_places=2)
 
     class Meta:
@@ -255,8 +262,28 @@ class Despesas(models.Model):
         verbose_name_plural = _("Despesas")
 
 
+class Balanco(models.Model):
+    compra = models.DecimalField('compra', max_digits=6, decimal_places=2,blank=True, null=True)
+    despesa = models.DecimalField('despesa', max_digits=6, decimal_places=2,blank=True, null=True)
+    datas = models.DateField('datas', blank=True, null=True)
 
+    class Meta:
+        verbose_name = _("Balanco")
+        verbose_name_plural = _("Balanco")
 
+    @receiver(post_save,sender=Compra)
+    def salvar_rendimento(sender,instance,created, **kwargs):
+        compra = Balanco()
+        compra.datas = instance.Data
+        compra.compra = instance.quantCompra * instance.Produto.valor
+        compra.save()
+
+    @receiver(post_save,sender=Despesas)
+    def salvar_despesa(sender,instance,created, **kwargs):
+        despesa = Balanco()
+        despesa.datas = instance.data
+        despesa.despesa = instance.valor
+        despesa.save()
 
 
 
