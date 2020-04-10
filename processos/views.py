@@ -156,7 +156,8 @@ def home(request):
 
     balanco = Balanco.objects.raw('''SELECT 1 as id,to_char(processos_balanco."datas", 'MM-YYYY') as periodo, 
                                        sum(compra) as rendimento, sum(despesa) as despesa, (sum(compra) - sum(despesa)) as total
-                                         FROM public.processos_balanco GROUP BY to_char(processos_balanco."datas", 'MM-YYYY') ''')
+                                         FROM public.processos_balanco GROUP BY to_char(processos_balanco."datas", 'MM-YYYY')
+                                          ORDER BY to_char(processos_balanco."datas", 'MM-YYYY')''')
 
     nomes = [obj.nomeproduto for obj in estoque]
     total = [int(obj.total) for obj in estoque]
@@ -167,7 +168,7 @@ def home(request):
 
     print(total)
     print(balancos)
-   # json.dumps({'x': decimal.Decimal('5.5')}, default=decimal_default)
+
     context = {
         'nomes': json.dumps(nomes),
         'total': json.dumps(total),
