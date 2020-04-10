@@ -1,15 +1,15 @@
-from itertools import chain
+import decimal
 
-from django.db.models import Count, Model
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.core.mail import send_mail
-from .models import *
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db import connection
+import json
+
+from decimal import Decimal
 
 @login_required
 class usuariosUpdate(UpdateView):
@@ -134,22 +134,46 @@ def editar_meus_dados(request):
 
 
 
+def decimal_default(obj):
+    if isinstance(obj, decimal.Decimal):
+        return float(obj)
+    raise TypeError
+
+
 
 @login_required
 def home(request):
-    cliente = Cliente.objects.all()
-    form = ClienteForm(request.POST)
 
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Registrado com sucesso')
-            return redirect('home')
+    estoque = Compra.objects.raw('''select distinct processos_produto.id,nomeproduto,
+                                   (select sum(processos_compra."quantCompra")from processos_compra 
+                                   where processos_compra."Produto_id" = processos_produto.id) 
+                                   as SomaCompras, (select sum(processos_lote."quantLote")
+                                   from processos_lote where processos_produto.id = processos_lote.Produto_id)
+                                   as SomaLote ,((select sum(processos_lote."quantLote") from processos_lote
+                                   where processos_produto.id = processos_lote.Produto_id) - (select sum(processos_compra."quantCompra")
+                                   from processos_compra where processos_compra."Produto_id" = processos_produto.id )  )
+                                   as total from processos_produto''')
 
+    balanco = Balanco.objects.raw('''SELECT 1 as id,to_char(processos_balanco."datas", 'MM-YYYY') as periodo, 
+                                       sum(compra) as rendimento, sum(despesa) as despesa, (sum(compra) - sum(despesa)) as total
+                                         FROM public.processos_balanco GROUP BY to_char(processos_balanco."datas", 'MM-YYYY') ''')
+
+    nomes = [obj.nomeproduto for obj in estoque]
+    total = [int(obj.total) for obj in estoque]
+
+    datas = [obj.periodo for obj in balanco]
+    balancos = [obj.total for obj in balanco]
+
+
+    print(total)
+    print(balancos)
+   # json.dumps({'x': decimal.Decimal('5.5')}, default=decimal_default)
     context = {
+        'nomes': json.dumps(nomes),
+        'total': json.dumps(total),
 
-        'form': form,
-        'cliente': cliente
+        'datas': json.dumps(datas),
+        'balancos': json.dumps(balancos, default=decimal_default),
     }
     return render(request,'home.html',context)
 
@@ -261,13 +285,6 @@ def estoque(request):
                                 as total from processos_produto''')
 
     form = EstoqueForm(request.POST)
-
-
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Registrado com sucesso')
-            return redirect('estoque')
 
     context = {
 
@@ -472,3 +489,4 @@ def balanco_edit(request, pk):
     }
 
     return render(request, 'balanco_edit.html', context)
+

@@ -54,5 +54,6 @@ urlpatterns = [
     path('balanco_edit/<int:pk>/', views.balanco_edit, name='balanco_edit'),
     path('balanco_delete/<int:pk>/', views.balanco_delete, name='balanco_delete'),
 
+
 ]
 
