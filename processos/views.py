@@ -160,11 +160,15 @@ def home(request):
                                          FROM public.processos_balanco GROUP BY to_char(processos_balanco."datas", 'MM-YYYY')
                                           ORDER BY to_char(processos_balanco."datas", 'MM-YYYY')''')
 
+
+
     nomes = [obj.nomeproduto for obj in estoque]
     total = [obj.total for obj in estoque]
 
     datas = [obj.periodo for obj in balanco]
     balancos = [obj.total for obj in balanco]
+
+    rendimentos = [obj.rendimento for obj in balanco]
 
 
 
@@ -174,6 +178,8 @@ def home(request):
 
         'datas': json.dumps(datas),
         'balancos': json.dumps(balancos, default=decimal_default),
+
+        'rendimentos': json.dumps(rendimentos, default=decimal_default),
 
     }
     return render(request,'home.html',context)
