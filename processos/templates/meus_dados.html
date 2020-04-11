@@ -11,7 +11,7 @@
             <!-- Details -->
             <div class="ui-details">
                 <!-- Name -->
-                <h3 id="name-header">{{ Usuario.Nome }}</h3>
+                <h3 id="name-header">{{ usuario.Nome }}</h3>
                 <!-- Designation -->
             </div>
             <!-- Image -->
@@ -33,7 +33,7 @@
                 <div class="col-sm-8 col-md-8 col-lg-8 col-lg-offset-2 acc-col">
                     <section>
                         <h3>Meus Dados</h3>
-                        <form class="ng-pristine ng-valid" role="form" method="POST" action="{% url 'meusdados' %}" enctype="multipart/form-data">
+                        <form class="ng-pristine ng-valid" role="form" method="POST" action="{% url 'meusdados' %}" enctype="multipart/form-data" onclick="validarSenha();">
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-sm-12">
@@ -44,17 +44,17 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label for="nomeUsuario" class="control-label">Nome:</label>
-                                    <input type="text" class="form-control" id="nomeUsuario" name="nomeUsuario" value="{{ Usuario.Nome }}" required>
+                                    <input type="text" class="form-control" id="nomeUsuario" name="nomeUsuario" value="{{ usuario.Nome }}" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label for="emailUsuario" class="control-label">Email:</label>
-                                    <input type="email" class="form-control" id="emailUsuario" name="emailUsuario" value="{{ Usuario.Email }}" required>
+                                    <input type="email" class="form-control" id="emailUsuario" name="emailUsuario" value="{{ usuario.Email }}" required>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="celularUsuario" class="control-label">Celular:</label>
-                                    <input type="text" class="form-control" id="celularUsuario" name="celularUsuario" value="{{ Usuario.Celular }}" required>
+                                    <input type="text" class="form-control" id="celularUsuario" name="celularUsuario" value="{{ usuario.Celular }}" required>
                                 </div>
                             </div>
 
@@ -62,37 +62,23 @@
 
                                 <div class="col-sm-4">
                                     <label for="cpfUsuario" class="control-label">CPF:</label>
-                                    <input type="text" class="form-control" id="cpfUsuario" name="cpfUsuario" value="{{ Usuario.CPF }}" required>
+                                    <input type="text" class="form-control" id="cpfUsuario" name="cpfUsuario" value="{{ usuario.CPF }}" required>
                                 </div>
 
                                 <div class="col-sm-2">
                                     <label for="rgUsuario" class="control-label">RG:</label>
-                                    <input type="text" class="form-control" id="rgUsuario" name="rgUsuario" value="{{ Usuario.RG }}">
+                                    <input type="text" class="form-control" id="rgUsuario" name="rgUsuario" value="{{ usuario.RG }}">
                                 </div>
 
 
                             </div>
 
 
-
-                            <div class="col-sm-12">
-                                <div class="btn-div">
-                                    <button class="btn btn-success pull-right">Atualizar</button>
-                                </div>
-                            </div>
-                        </form>
-                    </section>
-
-
-
-                    <section>
-                        <h3>Informações de Login</h3>
-                        <form class="" role="form" method="POST" action="{% url 'meusdados' %}" onsubmit="return validarSenha();">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label for="usuarioLogin" class="control-label">Login:</label>
                                     <div class="">
-                                        <input type="text" class="form-control" id="usuarioLogin" name="usuarioLogin" value="{{ Usuario.Login }}">
+                                        <input type="text" class="form-control" id="usuarioLogin" name="usuarioLogin" value="{{ usuario.Login }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
@@ -104,7 +90,7 @@
                                 <div class="col-sm-12">
                                     <label for="senhaConfirm" class="control-label">Confirmar Senha:</label>
                                     <div class="">
-                                        <input type="password" class="form-control" id="senhaConfirm" name="senhaConfirm" onkeypress="validarSenha();" required>
+                                        <input type="password" class="form-control" id="senhaConfirm" name="senhaConfirm" onkeyup="validarSenha();" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
@@ -115,6 +101,11 @@
                             </div>
                         </form>
                     </section>
+
+
+
+
+
 
                 </div>
                 <!-- col-8 -->
@@ -128,20 +119,23 @@
 {% endblock content-main %} {% block extraJS %}
 <script>    
 
-    function validarSenha() {
-        var password = document.getElementById("usuarioSenha")
-            , confirm_password = document.getElementById("senhaConfirm");
+     function validarSenha() {
+         var password = document.getElementById("usuarioSenha").value;
+         var confirm_password = document.getElementById("senhaConfirm").value;
 
-        if (password != confirm_password) {
-            document.getElementById('usuarioSenha').style.borderColor = "red";
-            document.getElementById('senhaConfirm').style.borderColor = "red";
-            $("#btn-update").attr('disabled',true);
-        } else {
-            document.getElementById('usuarioSenha').style.borderColor = "green";
-            document.getElementById('senhaConfirm').style.borderColor = "green";
-            $("#btn-update").attr('disabled',false);
-            
-        }
+       console.log("senha "+password);
+       console.log("Confirmar senha " +confirm_password);
 
-    }
+         if (password != confirm_password) {
+             document.getElementById('usuarioSenha').style.borderColor = "red";
+             document.getElementById('senhaConfirm').style.borderColor = "red";
+             $("#btn-update").attr('disabled',true);
+         } else {
+             document.getElementById('usuarioSenha').style.borderColor = "green";
+             document.getElementById('senhaConfirm').style.borderColor = "green";
+             $("#btn-update").attr('disabled',false);
+
+         }
+
+     }
 </script> {% endblock extraJS %}

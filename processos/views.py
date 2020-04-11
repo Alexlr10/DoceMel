@@ -1,18 +1,20 @@
+import datetime
 import decimal
-from itertools import chain
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.core.mail import send_mail
 from .forms import *
+from .models import *
+from . import models
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import json
 
-from decimal import Decimal
 
-@login_required
+
+
 class usuariosUpdate(UpdateView):
     model = Usuario
     fields = ('Nome',
@@ -23,13 +25,13 @@ class usuariosUpdate(UpdateView):
               'Funcao',
               )
     success_url = reverse_lazy('usuarios')
-    template_name = 'legacy/usuarios_edit.html'
+    template_name = 'usuarios_edit.html'
 
 
 class usuariosDelete(DeleteView):
     model = Usuario
     success_url = reverse_lazy('usuarios')
-    template_name = 'legacy/usuarios_delete.html'
+    template_name = 'usuarios_delete.html'
 
 @login_required
 def usuariosEdit(request, pk):
@@ -43,7 +45,7 @@ def usuariosEdit(request, pk):
 
     context = {
         'form': form,
-        'usuario': usuario
+        'usuario': usuario.id
     }
 
     return render(request, 'usuarios_edit.html', context)
@@ -95,11 +97,15 @@ def usuarios(request):
 
     return render(request, 'usuarios.html', context)
 
+
 @login_required
 def editar_meus_dados(request):
-    if request.method == 'POST':
+    # usuario = get_object_or_404(Usuario, pk=request.user.id)
+    # print(usuario)
+    if request.method == 'POST' and request.POST.get('usuarioSenha') != None:
         usuario = get_object_or_404(Usuario, pk=request.user.id)
         email_usuario = request.user.Email.lower()
+
         if request.FILES.get('usuarioFoto') != None:
             usuario.Foto = request.FILES.get('usuarioFoto')
 
@@ -108,24 +114,26 @@ def editar_meus_dados(request):
         usuario.Celular = request.POST.get('celularUsuario')
         usuario.CPF = request.POST.get('cpfUsuario')
         usuario.RG = request.POST.get('rgUsuario')
-
-        if request.POST.get('usuarioSenha') != None:
-            usuario.Senha = request.POST.get('usuarioSenha')
-
+        usuario.Senha = request.POST.get('usuarioSenha')
         usuario.save()
-        send_mail(
-            'VivoX - Atualiação',
-            'Você atualizou as informações do seu perfil',
-            'vivox.nao-responda@gestaovivox.com.br',
-            [email_usuario],
-            fail_silently=False,
-        )
+        print(usuario.Nome)
+        print(usuario.Email)
+        #
+        # if request.POST.get('usuarioSenha') != None:
+        #     usuario.Senha = request.POST.get('usuarioSenha')
+        #     usuario.save()
+        # # send_mail(
+        # #     'VivoX - Atualiação',
+        # #     'Você atualizou as informações do seu perfil',
+        # #     'vivox.nao-responda@gestaovivox.com.br',
+        # #     [email_usuario],
+        # #     fail_silently=False,
+        # # )
         messages.success(request, 'Dados alterados com sucesso')
 
         return redirect(reverse('meusdados'))
 
     usuario = request.user
-
     context = {
         'usuario': usuario
     }
