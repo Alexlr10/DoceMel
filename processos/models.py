@@ -244,13 +244,8 @@ class Compra(models.Model):
 
 
     def __str__(self):
-        return self.Cliente.nome
+        return self.Cliente.nome +" "+ self.Produto.nomeproduto +" "+ str(self.quantCompra)
 
-    def __str__(self):
-        return Produto.nomeproduto
-
-    def __str__(self):
-        return str(self.quantCompra)
 
 class Despesas(models.Model):
     despesa = models.CharField('Despesa', max_length=4, choices=FUNCAO_CHOICE_DESPESA)
@@ -263,6 +258,8 @@ class Despesas(models.Model):
 
 
 class Balanco(models.Model):
+    compras_id = models.IntegerField('compras_id', blank=True, null=True)
+    despesa_id = models.IntegerField('despesa_id', blank=True, null=True)
     compra = models.DecimalField('compra', max_digits=6, decimal_places=2,blank=True, null=True)
     despesa = models.DecimalField('despesa', max_digits=6, decimal_places=2,blank=True, null=True)
     datas = models.DateField('datas', blank=True, null=True)
@@ -274,6 +271,7 @@ class Balanco(models.Model):
     @receiver(post_save,sender=Compra)
     def salvar_rendimento(sender,instance,created, **kwargs):
         compra = Balanco()
+        compra.compras_id = instance.pk
         compra.datas = instance.Data
         compra.compra = instance.quantCompra * instance.Produto.valor
         compra.save()
@@ -281,11 +279,14 @@ class Balanco(models.Model):
     @receiver(post_save,sender=Despesas)
     def salvar_despesa(sender,instance,created, **kwargs):
         despesa = Balanco()
+        despesa.despesa_id = instance.pk
         despesa.datas = instance.data
         despesa.despesa = instance.valor
         despesa.save()
 
 
+    def __str__(self):
+        return str(self.datas)
 
 
 

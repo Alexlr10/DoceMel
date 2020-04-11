@@ -1,4 +1,5 @@
 import decimal
+from itertools import chain
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -160,14 +161,12 @@ def home(request):
                                           ORDER BY to_char(processos_balanco."datas", 'MM-YYYY')''')
 
     nomes = [obj.nomeproduto for obj in estoque]
-    total = [int(obj.total) for obj in estoque]
+    total = [obj.total for obj in estoque]
 
     datas = [obj.periodo for obj in balanco]
     balancos = [obj.total for obj in balanco]
 
 
-    print(total)
-    print(balancos)
 
     context = {
         'nomes': json.dumps(nomes),
@@ -175,6 +174,7 @@ def home(request):
 
         'datas': json.dumps(datas),
         'balancos': json.dumps(balancos, default=decimal_default),
+
     }
     return render(request,'home.html',context)
 
@@ -307,10 +307,10 @@ def compra(request):
                                     valor*"quantCompra" as total FROM  public.processos_compra, 
                                     public.processos_cliente, public.processos_produto WHERE 
                                     processos_compra."Produto_id" = processos_produto.id AND
-                                    processos_cliente.id = processos_compra."Cliente_id";''')
+                                    processos_cliente.id = processos_compra."Cliente_id" 
+                                    ORDER BY processos_compra."Data" desc;''')
 
     form = CompraForm(request.POST)
-
 
     if request.method == 'POST':
         if form.is_valid():
@@ -332,22 +332,33 @@ def compra_delete(request,pk):
     compra.delete()
     return redirect('compra')
 
+@login_required
+def balancoCompra_delete(request,pk):
+    balanco = get_object_or_404(Balanco,pk=pk)
+    balanco.delete()
+    return redirect('balanco')
 
 @login_required
 def compra_edit(request, pk):
 
     compra = get_object_or_404(Compra, pk=pk)
 
+    balanco = Balanco.objects.get(compras_id = pk)
+
     form = CompraForm(request.POST or None, instance=compra)
 
     if form.is_valid():
+        balanco.delete()
         form.save()
         return redirect('compra')
+
 
     context = {
         'form': form,
         'compra': compra
     }
+
+
 
     return render(request, 'compra_edit.html', context)
 
@@ -447,7 +458,9 @@ def balanco(request):
                                     sum(compra) as rendimento, sum(despesa) as despesa, (sum(compra) - sum(despesa)) as total
                                       FROM public.processos_balanco GROUP BY to_char(processos_balanco."datas", 'MM-YYYY') ''')
 
-    balancoCompleto = Balanco.objects.all()
+    balancoCompleto = Balanco.objects.all().order_by('-datas')
+
+
 
     form = BalancoForm(request.POST)
 
