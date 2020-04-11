@@ -332,11 +332,6 @@ def compra_delete(request,pk):
     compra.delete()
     return redirect('compra')
 
-@login_required
-def balancoCompra_delete(request,pk):
-    balanco = get_object_or_404(Balanco,pk=pk)
-    balanco.delete()
-    return redirect('balanco')
 
 @login_required
 def compra_edit(request, pk):
@@ -438,9 +433,11 @@ def despesa_edit(request, pk):
 
     despesa = get_object_or_404(Despesas, pk=pk)
 
+    balanco = Balanco.objects.get(despesa_id=pk)
     form = DespesasForm(request.POST or None, instance=despesa)
 
     if form.is_valid():
+        balanco.delete()
         form.save()
         return redirect('despesa')
 
