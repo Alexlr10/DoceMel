@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% load staticfiles %} {% load bootstrap %} {% block content-header %}
 
-<i class="fa fa-user "> </i> Compras
-<small>Gerenciar compras</small>
+<i class="fa fa-user "> </i> Vendas
+<small>Gerenciar Vendas</small>
 
 
 {% endblock content-header %} {% block content-main %}
@@ -15,7 +15,7 @@
         <div class="box-header">
 
             <button type="button" class="ui-button" data-toggle="modal" data-target="#exampleModal51">Efetuar
-                compra
+                Venda
             </button>
 
         </div>
@@ -34,6 +34,7 @@
                         <th>Cliente</th>
                         <th>Produto</th>
                         <th>Quantidade</th>
+                        <th>Desconto</th>
                         <th>Valor R$</th>
                         <th>Data</th>
 
@@ -48,6 +49,7 @@
                         <td>{{ u.Cliente }}</td>
                         <td>{{ u.Produto }}</td>
                         <td>{{ u.quantCompra }}</td>
+                        <td>{{ u.Desconto }}</td>
                         <td>{{ u.total }}</td>
                         <td>{{ u.Data }}</td>
 
@@ -98,7 +100,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="exampleModalLabel"> Cadastrar Compra</h4>
+                <h4 class="modal-title" id="exampleModalLabel"> Cadastrar Venda</h4>
             </div>
             <div class="modal-body">
                 <form method="POST">

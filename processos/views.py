@@ -100,11 +100,9 @@ def usuarios(request):
 
 @login_required
 def editar_meus_dados(request):
-    # usuario = get_object_or_404(Usuario, pk=request.user.id)
-    # print(usuario)
     if request.method == 'POST' and request.POST.get('usuarioSenha') != None:
         usuario = get_object_or_404(Usuario, pk=request.user.id)
-        email_usuario = request.user.Email.lower()
+       # email_usuario = request.user.Email.lower()
 
         if request.FILES.get('usuarioFoto') != None:
             usuario.Foto = request.FILES.get('usuarioFoto')
@@ -118,17 +116,6 @@ def editar_meus_dados(request):
         usuario.save()
         print(usuario.Nome)
         print(usuario.Email)
-        #
-        # if request.POST.get('usuarioSenha') != None:
-        #     usuario.Senha = request.POST.get('usuarioSenha')
-        #     usuario.save()
-        # # send_mail(
-        # #     'VivoX - Atualiação',
-        # #     'Você atualizou as informações do seu perfil',
-        # #     'vivox.nao-responda@gestaovivox.com.br',
-        # #     [email_usuario],
-        # #     fail_silently=False,
-        # # )
         messages.success(request, 'Dados alterados com sucesso')
 
         return redirect(reverse('meusdados'))
@@ -317,8 +304,8 @@ def estoque(request):
 def compra(request):
     compra = Compra.objects.raw('''SELECT processos_compra.id, processos_cliente.nome, 
                                     processos_compra."Data", processos_produto.nomeproduto, 
-                                    processos_produto.valor, processos_compra."quantCompra",
-                                    valor*"quantCompra" as total FROM  public.processos_compra, 
+                                    processos_produto.valor, processos_compra."quantCompra",processos_compra."Desconto",
+                                   ((valor*"quantCompra") - processos_compra."Desconto" )as total FROM  public.processos_compra, 
                                     public.processos_cliente, public.processos_produto WHERE 
                                     processos_compra."Produto_id" = processos_produto.id AND
                                     processos_cliente.id = processos_compra."Cliente_id" 

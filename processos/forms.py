@@ -176,9 +176,9 @@ class CompraForm(forms.ModelForm):
 
     class Meta:
         model = Compra
-        fields = '__all__'
+        fields = ['Cliente','Produto','quantCompra','Desconto','Data']
         widgets = {
-
+            'Desconto': forms.TextInput(attrs={'type': 'number','step':0.01, 'class': 'form-control', 'value':0.0}),
             'Data': forms.TextInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
 

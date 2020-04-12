@@ -228,14 +228,12 @@ class Lote(models.Model):
         return self.produto.nomeproduto
 
 
-
-
-
 class Compra(models.Model):
     Cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='Clientes')
     Produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='Produtos')
     quantCompra = models.IntegerField('Quantidade', blank=True, null=True)
-    Data = models.DateField('Data', blank=True, null=True)
+    Data = models.DateField('Data',blank=True, null=True)
+    Desconto = models.DecimalField('Desconto',max_digits=6, decimal_places=2)
 
 
     class Meta:
@@ -273,7 +271,7 @@ class Balanco(models.Model):
         compra = Balanco()
         compra.compras_id = instance.pk
         compra.datas = instance.Data
-        compra.compra = instance.quantCompra * instance.Produto.valor
+        compra.compra = ((instance.quantCompra * instance.Produto.valor) - instance.Desconto)
         compra.save()
 
     @receiver(post_save,sender=Despesas)
