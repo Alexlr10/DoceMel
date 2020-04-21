@@ -19,6 +19,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'select2/css/select2.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/usuario.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/ionicons.min.css' %}">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -120,18 +121,15 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MENU</li>
             <li><a href="{% url 'home' %}"><i class="fa fa-home"></i> <span>Início</span></a></li>
-            <li><a href="{% url 'usuarios' %}"><i class="fa fa-user-plus"></i>Usuários</a></li>
+            <li><a href="{% url 'usuarios' %}"><i class="fa fa-user-plus"></i><span>Usuários</span></a></li>
              <li><a href="{% url 'cliente' %}"><i class="fa  fa-users"></i> <span>Cliente</span></a></li>
-            <li><a href="{% url 'produto' %}"><i class="fa fa-check"></i>Produtos</a></li>
-            <li><a href="{% url 'estoque' %}"><i class="fa  fa-check-square"></i>Estoque</a></li>
-            <li><a href="{% url 'compra' %}"><i class="fa  fa-cart-plus"></i>Vendas</a></li>
-            <li><a href="{% url 'lote' %}"><i class="fa fa-truck"></i>Lote</a></li>
-            <li><a href="{% url 'despesa' %}"><i class="fa fa-credit-card"></i>Despesas</a></li>
-            <li><a href="{% url 'balanco' %}"><i class="fa fa-balance-scale"></i>Balanço</a></li>
+            <li><a href="{% url 'produto' %}"><i class="fa fa-check"></i><span>Produtos</span></a></li>
+            <li><a href="{% url 'estoque' %}"><i class="fa  fa-check-square"></i><span>Estoque</span></a></li>
+            <li><a href="{% url 'compra' %}"><i class="fa  fa-cart-plus"></i><span>Vendas</span></a></li>
+            <li><a href="{% url 'lote' %}"><i class="fa fa-truck"></i><span>Lote</span></a></li>
+            <li><a href="{% url 'despesa' %}"><i class="fa fa-credit-card"></i><span>Despesas</span></a></li>
+            <li><a href="{% url 'balanco' %}"><i class="fa fa-balance-scale"></i><span>Balanço</span></a></li>
 
-
-
-        </ul>
 
 
 
